@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title %></title>
+        <link rel="stylesheet" href="/css/main.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet" />
+    </head>
+    <body>
+        <%- include('partials/header') %>
+
+        <main class="content-section">
+            <h1>Search Activities</h1>
+            <form action="/fitness/search" method="GET" class="styled-form">
+                <div class="form-group">
+                    <label for="q">Search Activity</label>
+                    <input
+                        type="text"
+                        id="q"
+                        name="q"
+                        placeholder="Search for activity (e.g. Running)"
+                        value="<%= search_term %>"
+                    />
+                </div>
+                <button type="submit" class="btn-cta">Search</button>
+            </form>
+
+            <% if (workouts && workouts.length > 0) { %>
+            <div class="results-list">
+                <h2>Results for "<%= search_term %>"</h2>
+                <div class="grid">
+                    <% workouts.forEach(function(workout) { %>
+                    <div class="card">
+                        <h3><%= workout.activity_type %></h3>
+                        <p><strong>Duration:</strong> <%= workout.duration %> mins</p>
+                        <p><strong>Calories:</strong> <%= workout.calories_burned %></p>
+                        <p><small><%= workout.date %></small></p>
+                    </div>
+                    <% }); %>
+                </div>
+            </div>
+            <% } else if (search_term) { %>
+            <p>No results found for "<%= search_term %>".</p>
+            <% } %>
+        </main>
+    </body>
+</html>

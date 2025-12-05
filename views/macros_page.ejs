@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title %></title>
+        <link rel="stylesheet" href="/css/main.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet" />
+    </head>
+    <body>
+        <%- include('partials/header') %>
+
+        <main class="content-section">
+            <h1>Macro Calculator</h1>
+            <p>Estimate your daily macronutrient needs based on your goal.</p>
+
+            <form action="/fitness/macros" method="POST" class="styled-form">
+                <div class="form-group">
+                    <label for="weight">Weight (kg):</label>
+                    <input type="number" id="weight" name="weight" step="0.1" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="goal">Goal:</label>
+                    <div style="margin-top: 10px">
+                        <select
+                            id="goal"
+                            name="goal"
+                            style="
+                                width: 100%;
+                                padding: 12px;
+                                border-radius: 8px;
+                                background: #1a1b26;
+                                color: white;
+                                border: 1px solid #444;
+                            "
+                        >
+                            <option value="lose">Lose Weight (Deficit)</option>
+                            <option value="maintain" selected>Maintain Weight</option>
+                            <option value="gain">Gain Muscle (Surplus)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="activity">Activity Level:</label>
+                    <div style="margin-top: 10px">
+                        <select
+                            id="activity"
+                            name="activity"
+                            style="
+                                width: 100%;
+                                padding: 12px;
+                                border-radius: 8px;
+                                background: #1a1b26;
+                                color: white;
+                                border: 1px solid #444;
+                            "
+                        >
+                            <option value="sedentary">Sedentary (Little/no exercise)</option>
+                            <option value="light" selected>Light (1-3 days/week)</option>
+                            <option value="moderate">Moderate (3-5 days/week)</option>
+                            <option value="active">Active (6-7 days/week)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-cta" style="margin-top: 20px; width: 100%">Calculate Macros</button>
+            </form>
+
+            <% if (results) { %>
+            <div
+                style="
+                    margin-top: 40px;
+                    background: var(--surface);
+                    padding: 30px;
+                    border-radius: 12px;
+                    text-align: center;
+                    border: 1px solid var(--primary);
+                "
+            >
+                <h2 style="color: var(--accent); margin-bottom: 20px">Your Daily Targets</h2>
+                <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px">
+                    <div>
+                        <h3 style="color: var(--text-muted); font-size: 0.9rem">Calories</h3>
+                        <p style="font-size: 1.5rem; font-weight: bold"><%= results.calories %> kcal</p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--text-muted); font-size: 0.9rem">Protein</h3>
+                        <p style="font-size: 1.5rem; font-weight: bold"><%= results.protein %>g</p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--text-muted); font-size: 0.9rem">Carbohydrates</h3>
+                        <p style="font-size: 1.5rem; font-weight: bold"><%= results.carbs %>g</p>
+                    </div>
+                    <div>
+                        <h3 style="color: var(--text-muted); font-size: 0.9rem">Fats</h3>
+                        <p style="font-size: 1.5rem; font-weight: bold"><%= results.fats %>g</p>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+        </main>
+    </body>
+</html>

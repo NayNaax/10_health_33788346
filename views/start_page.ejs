@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title %></title>
+        <link rel="stylesheet" href="/css/main.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet" />
+    </head>
+    <body>
+        <%- include('partials/header') %>
+
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>Unlock Your Potential</h1>
+                <p>Track your workouts, monitor your progress, and achieve your health goals with Bitality.</p>
+                <a href="/fitness/add" class="btn-cta">Start Tracking</a>
+            </div>
+        </section>
+
+        <% if (recentActivity) { %>
+        <section class="content-section" style="margin-top: 40px">
+            <h2>Recent Activity</h2>
+            <div
+                style="
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                    gap: 20px;
+                    margin-top: 20px;
+                "
+            >
+                <% if (recentActivity.length > 0) { %> <% recentActivity.forEach(function(activity) { %>
+                <div
+                    style="
+                        background: var(--surface);
+                        padding: 20px;
+                        border-radius: 12px;
+                        border: 1px solid var(--secondary);
+                    "
+                >
+                    <h3 style="font-size: 1.2rem; color: var(--accent)"><%= activity.activity_type %></h3>
+                    <p style="color: var(--text-muted); margin: 5px 0">
+                        <%= new Date(activity.date).toLocaleDateString() %>
+                    </p>
+                    <div style="display: flex; justify-content: space-between; margin-top: 15px">
+                        <span>⏱️ <%= activity.duration %> min</span>
+                        <span>🔥 <%= activity.calories_burned %> kcal</span>
+                    </div>
+                    <% if (activity.intensity) { %>
+                    <div style="margin-top: 10px">
+                        <span
+                            style="
+                                font-size: 0.8rem;
+                                padding: 2px 8px;
+                                border-radius: 4px;
+                                background: #333;
+                                color: #fff;
+                            "
+                            ><%= activity.intensity %></span
+                        >
+                    </div>
+                    <% } %>
+                </div>
+                <% }); %> <% } else { %>
+                <p>No recent activity. Start logging!</p>
+                <% } %>
+            </div>
+        </section>
+        <% } %>
+    </body>
+</html>

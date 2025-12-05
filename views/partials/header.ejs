@@ -1,0 +1,62 @@
+<header class="main-header">
+    <div class="logo">Bitality</div>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/fitness/add">Add Workout</a>
+        <a href="/fitness/search">Search</a>
+        <div class="dropdown">
+            <a href="#" style="pointer-events: none">Fitness Tools ▾</a>
+            <div class="dropdown-content">
+                <a href="/fitness/bmi">BMI Calculator</a>
+                <a href="/fitness/bmr">BMR Calculator</a>
+                <a href="/fitness/water">Water Tracker</a>
+                <a href="/fitness/tips">Health Tips</a>
+            </div>
+        </div>
+        <% if (user) { %>
+        <span style="color: var(--text-muted); margin: 0 10px"
+            >Hi, <a href="/fitness/profile" style="color: var(--accent); font-weight: bold"><%= user %></a></span
+        >
+        <a href="/fitness/audit">View Logs</a>
+        <a href="/users/logout" class="btn-login" style="background-color: #ef4444">Logout</a>
+        <% } else { %>
+        <a href="/users/login" class="btn-login">Login</a>
+        <% } %>
+        <button
+            id="theme-toggle"
+            style="
+                margin-left: 20px;
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+                color: var(--text);
+            "
+        >
+            🌙
+        </button>
+
+        <script>
+            const toggleBtn = document.getElementById("theme-toggle");
+            const body = document.body;
+
+            // Check local storage
+            if (localStorage.getItem("theme") === "light") {
+                body.classList.add("light-mode");
+                toggleBtn.innerText = "☀️";
+            }
+
+            toggleBtn.addEventListener("click", () => {
+                body.classList.toggle("light-mode");
+                if (body.classList.contains("light-mode")) {
+                    localStorage.setItem("theme", "light");
+                    toggleBtn.innerText = "☀️";
+                } else {
+                    localStorage.setItem("theme", "dark");
+                    toggleBtn.innerText = "🌙";
+                }
+            });
+        </script>
+    </nav>
+</header>

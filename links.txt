@@ -1,0 +1,11 @@
+home=http://localhost:8000/
+about=http://localhost:8000/about
+login=http://localhost:8000/users/login
+register=http://localhost:8000/users/register
+add_workout=http://localhost:8000/fitness/add
+search=http://localhost:8000/fitness/search
+
+# Note: Ideally these would be the deployed URLs if I could deploy it.
+# Since I am running locally/submitting code, these are the paths.
+# If I had the Goldmsiths server URL, I would put it here e.g.:
+# home=https://www.doc.gold.ac.uk/usr/123/

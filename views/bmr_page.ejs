@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title %></title>
+        <link rel="stylesheet" href="/css/main.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet" />
+    </head>
+    <body>
+        <%- include('partials/header') %>
+
+        <main class="content-section">
+            <h1>BMR Calculator</h1>
+            <p>Calculate your Basal Metabolic Rate (Calories burned at rest).</p>
+
+            <form action="/fitness/bmr" method="POST" class="styled-form">
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select
+                        id="gender"
+                        name="gender"
+                        style="
+                            width: 100%;
+                            padding: 12px 15px;
+                            border-radius: 8px;
+                            border: 1px solid #444;
+                            background-color: #1a1b26;
+                            color: white;
+                            margin-bottom: 20px;
+                        "
+                    >
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="weight">Weight (kg)</label>
+                    <input type="number" id="weight" name="weight" step="0.1" placeholder="e.g. 70" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="height">Height (cm)</label>
+                    <input type="number" id="height" name="height" placeholder="e.g. 175" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="age">Age (years)</label>
+                    <input type="number" id="age" name="age" placeholder="e.g. 25" required />
+                </div>
+
+                <button type="submit" class="btn-cta">Calculate BMR</button>
+            </form>
+
+            <% if (bmr) { %>
+            <div class="styled-form" style="margin-top: 30px; text-align: center">
+                <h2>Your BMR is: <%= bmr %> kcal/day</h2>
+                <p style="color: var(--text-muted); margin-top: 10px">
+                    This is the number of calories your body burns just to stay alive.
+                </p>
+            </div>
+            <% } %>
+        </main>
+    </body>
+</html>

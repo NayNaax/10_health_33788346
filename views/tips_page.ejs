@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title %></title>
+        <link rel="stylesheet" href="/css/main.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet" />
+    </head>
+    <body>
+        <%- include('partials/header') %>
+
+        <main class="content-section">
+            <h1>Health & Fitness Tips</h1>
+            <p>Stay healthy with these daily tips.</p>
+
+            <div
+                class="grid"
+                style="
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                    gap: 20px;
+                    margin-top: 30px;
+                "
+            >
+                <% tips.forEach(function(tip) { %>
+                <div
+                    class="card"
+                    style="
+                        background: var(--surface);
+                        padding: 25px;
+                        border-radius: 12px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    "
+                >
+                    <h3 style="color: var(--accent); margin-bottom: 10px"><%= tip.title %></h3>
+                    <p style="color: var(--text-muted)"><%= tip.content %></p>
+                </div>
+                <% }); %>
+            </div>
+        </main>
+    </body>
+</html>
