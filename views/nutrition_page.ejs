@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title><%= title %></title>
+        <link rel="stylesheet" href="/css/main.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet" />
+    </head>
+    <body>
+        <%- include('partials/header') %>
+
+        <section class="content-section">
+            <h1>Nutrition Tracker</h1>
+            <p>Type what you ate to get nutrition info. e.g., "1 banana and 2 eggs"</p>
+
+            <form action="/fitness/nutrition/analyze" method="POST" class="styled-form">
+                <div class="form-group">
+                    <label for="query">What did you eat?</label>
+                    <textarea
+                        name="query"
+                        id="query"
+                        rows="3"
+                        required
+                        style="
+                            width: 100%;
+                            padding: 12px;
+                            border-radius: 8px;
+                            background: #1a1b26;
+                            border: 1px solid #444;
+                            color: white;
+                        "
+                    >
+<%= typeof query !== 'undefined' ? query : '' %></textarea
+                    >
+                </div>
+                <button type="submit" class="btn-cta">Analyze Food</button>
+            </form>
+        </section>
+
+        <% if (analysis && analysis.items && analysis.items.length > 0) { %>
+        <section class="content-section" style="padding-top: 0">
+            <h2 style="color: var(--accent); margin-bottom: 20px">Analysis Results</h2>
+
+            <div
+                style="
+                    background: var(--surface);
+                    padding: 20px;
+                    border-radius: 12px;
+                    border: 1px solid var(--primary);
+                    margin-bottom: 20px;
+                "
+            >
+                <table style="width: 100%; text-align: left; border-collapse: collapse; color: var(--text)">
+                    <thead>
+                        <tr style="border-bottom: 1px solid #444">
+                            <th style="padding: 10px">Item</th>
+                            <th style="padding: 10px">Calories</th>
+                            <th style="padding: 10px">Protein (g)</th>
+                            <th style="padding: 10px">Fat (g)</th>
+                            <th style="padding: 10px">Carbs (g)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% let totalCal = 0, totalPro = 0, totalFat = 0, totalCarb = 0; %> <%
+                        analysis.items.forEach(function(item) { totalCal += item.calories; totalPro += item.protein_g;
+                        totalFat += item.fat_total_g; totalCarb += item.carbohydrates_total_g; %>
+                        <tr style="border-bottom: 1px solid #333">
+                            <td style="padding: 10px"><%= item.name %></td>
+                            <td style="padding: 10px"><%= item.calories %></td>
+                            <td style="padding: 10px"><%= item.protein_g %></td>
+                            <td style="padding: 10px"><%= item.fat_total_g %></td>
+                            <td style="padding: 10px"><%= item.carbohydrates_total_g %></td>
+                        </tr>
+                        <% }); %>
+                        <tr style="font-weight: bold; background: rgba(108, 99, 255, 0.1)">
+                            <td style="padding: 10px">TOTAL</td>
+                            <td style="padding: 10px"><%= totalCal.toFixed(1) %></td>
+                            <td style="padding: 10px"><%= totalPro.toFixed(1) %></td>
+                            <td style="padding: 10px"><%= totalFat.toFixed(1) %></td>
+                            <td style="padding: 10px"><%= totalCarb.toFixed(1) %></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <form action="/fitness/nutrition/log" method="POST" style="margin-top: 20px; text-align: right">
+                    <input type="hidden" name="meal_name" value="<%= query %>" />
+                    <input type="hidden" name="calories" value="<%= totalCal %>" />
+                    <input type="hidden" name="protein" value="<%= totalPro %>" />
+                    <input type="hidden" name="fat" value="<%= totalFat %>" />
+                    <input type="hidden" name="carbs" value="<%= totalCarb %>" />
+                    <button
+                        type="submit"
+                        class="btn-login"
+                        style="background: var(--accent); color: #000; border: none; font-weight: bold"
+                    >
+                        Save to Daily Log
+                    </button>
+                </form>
+            </div>
+        </section>
+        <% } %> <% if (history && history.length > 0) { %>
+        <section class="content-section">
+            <h2>Recent Meals</h2>
+            <div style="display: grid; gap: 15px">
+                <% history.forEach(function(log) { %>
+                <div
+                    style="
+                        background: var(--surface);
+                        padding: 15px;
+                        border-radius: 8px;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    "
+                >
+                    <div>
+                        <h4 style="color: white; margin-bottom: 5px"><%= log.meal_name %></h4>
+                        <span style="color: var(--text-muted); font-size: 0.9rem"
+                            ><%= new Date(log.date).toLocaleTimeString() %></span
+                        >
+                    </div>
+                    <div style="text-align: right">
+                        <span style="color: var(--accent); font-weight: bold; font-size: 1.1rem"
+                            ><%= Math.round(log.calories) %> kcal</span
+                        ><br />
+                        <span style="color: var(--text-muted); font-size: 0.8rem"
+                            >P: <%= Math.round(log.protein) %>g | C: <%= Math.round(log.carbs) %>g | F: <%=
+                            Math.round(log.fat) %>g</span
+                        >
+                    </div>
+                </div>
+                <% }); %>
+            </div>
+        </section>
+        <% } %>
+    </body>
+</html>

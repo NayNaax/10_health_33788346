@@ -31,6 +31,7 @@ The database schema (`health`) is normalized and consists of three primary table
 1.  **`users`**: Manages authentication (ID, unique username, password).
 2.  **`fitness_logs`**: Stores workout activities. It has a Foreign Key (`user_id`) relationship with `users` (One-to-Many).
 3.  **`audit_logs`**: Tracks system events for security and debugging.
+4.  **`water_logs`**: Stores daily water intake records for persistence.
 
 ```mermaid
 erDiagram
@@ -56,12 +57,31 @@ erDiagram
         string details
         datetime timestamp
     }
+    WATER_LOGS {
+        int id PK
+        int amount
+        datetime date
+        int user_id FK
+    }
+    NUTRITION_LOGS {
+        int id PK
+        string meal_name
+        decimal calories
+        decimal protein
+        decimal fat
+        decimal carbs
+        datetime date
+        int user_id FK
+    }
 ```
 
 ## User Functionality
 
 **Authentication & Profiles**
-Users must register and login to access personal data. The system enforces strong passwords for security. The **Profile Page** aggregates user statistics (total workouts, calories) and displays recent activity history.
+Users must register and login to access personal data. The system enforces strong passwords for security.
+
+**Dashboard & User Experience**
+Upon login, the **Home Dashboard** greets users with "Quick Stats" widgets displaying their total calories burned, total workouts, and daily water intake at a glance, followed by their recent activity.
 
 ![Profile Page](doc_images/profile_page_1764951708566.png)
 
@@ -79,12 +99,14 @@ Bitality includes a suite of calculators:
 -   **BMI Calculator:** Assesses weight category.
 -   **BMR Calculator:** Estimates daily caloric needs.
 -   **Macro Calculator:** Suggests nutrient splits based on fitness goals (lose/gain weight).
+-   **Exercise Finder:** Uses the API Ninjas Exercises API to let users discover new workouts by muscle group and seamlessly log them.
+-   **Nutrition Tracker:** Users can type natural language meal descriptions (e.g., "1 avocado and 2 eggs"). The app uses the **CalorieNinjas API** to analyze the text and save a detailed nutrition breakdown (Calories, Macros).
 
 ![Macro Calculator](doc_images/macro_result_1764951661790.png)
 
 **Utilities**
 
--   **Water Tracker:** A daily counter for hydration goals.
+-   **Water Tracker:** A persistent daily counter for hydration goals, stored in the database so progress isn't lost on logout.
 -   **Audit Log:** A transparency feature allowing users to view recorded system actions associated with their account.
 
 ![Audit Log](doc_images/audit_log_verified_1764952288348.png)
@@ -124,13 +146,41 @@ const errors = validationResult(req);
 **4. Design System with CSS Variables**
 A custom "Dark Mode" theme was built using CSS Custom Properties (`--bg-color`, `--accent`). This allows for dynamic client-side theming without page reloads, toggled via a simple JS script that updates the `body` class.
 
+**5. Complex SQL Aggregation**
+The dashboard utilizes complex SQL with subqueries to efficiently fetch summary statistics (Calories, Workouts, Water) in a single database round-trip, optimizing performance and reducing server load.
+
+_Reference: `routes/main.js`_
+
+```javascript
+const statsQuery = `
+    SELECT
+        COALESCE((SELECT SUM(calories_burned) FROM fitness_logs...), 0) as totalCalories,
+        COALESCE((SELECT COUNT(*) FROM fitness_logs...), 0) as totalWorkouts,
+        ...
+`;
+`;
+```
+
+**6. External API Integration**
+The application integrates with the **API Ninjas Exercises API** using Node.js `fetch`. This feature demonstrates asynchronous data handling (`async/await`) and third-party service consumption to enrich the user experience with real-world fitness data.
+
+_Reference: `routes/fitness.js`_
+
+```javascript
+const response = await fetch(`https://api.api-ninjas.com/v1/exercises?muscle=${muscle}`, {
+    headers: { "X-Api-Key": process.env.API_NINJAS_KEY },
+});
+```
+
+The **CalorieNinjas API** integration follows a similar pattern but involves a two-step process: Analysis (fetching data based on text) and Logging (saving the parsed result to the database).
+
 ## AI Declaration
 
 I utilized an AI coding assistant (Google DeepMind's Antigravity) to accelerate the development process.
 
--   **Boilerplate & Structure:** The AI generated the initial Express server setup (`index.js`) and directory structure.
+-   **Boilerplate & Structure:** The AI generated the directory structure.
 -   **Debugging:** The AI helped identify and fix a missing database route for the Audit Log feature and corrected `init_db.js` configuration credential mismatches.
--   **Documentation:** The AI assisted in formatting this report and generating the Mermaid diagrams for the architecture and data model.
+-   **Documentation:** The AI assisted in formatting this report.
 -   **Verification:** An AI agent was used to perform black-box testing of the application by simulating user interactions (browsing, clicking, logging) to verify functionality.
 
 All logic, especially the core fitness calculations and database queries, was reviewed and refined to ensure it met the specific assignment requirements.

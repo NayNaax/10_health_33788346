@@ -1,4 +1,6 @@
 
+CREATE DATABASE IF NOT EXISTS health;
+USE health;
 
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -23,4 +25,24 @@ CREATE TABLE IF NOT EXISTS audit_logs (
     action VARCHAR(255),
     details TEXT,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS water_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    amount INT NOT NULL, -- in ml
+    date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    user_id INT,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE IF NOT EXISTS nutrition_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    meal_name VARCHAR(255),
+    calories DECIMAL(10, 2),
+    protein DECIMAL(10, 2),
+    fat DECIMAL(10, 2),
+    carbs DECIMAL(10, 2),
+    date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    user_id INT,
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );

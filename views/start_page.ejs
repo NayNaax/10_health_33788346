@@ -18,7 +18,50 @@
             </div>
         </section>
 
-        <% if (recentActivity) { %>
+        <% if (stats) { %>
+        <section class="content-section" style="padding-bottom: 0">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px">
+                <div
+                    style="
+                        background: var(--surface);
+                        padding: 20px;
+                        border-radius: 12px;
+                        text-align: center;
+                        border: 1px solid var(--primary);
+                    "
+                >
+                    <h3 style="color: var(--text-muted); font-size: 1rem">Total Calories</h3>
+                    <p style="font-size: 2rem; color: var(--accent); font-weight: bold">
+                        <%= stats.totalCalories.toLocaleString() %> kcal
+                    </p>
+                </div>
+                <div
+                    style="
+                        background: var(--surface);
+                        padding: 20px;
+                        border-radius: 12px;
+                        text-align: center;
+                        border: 1px solid var(--accent);
+                    "
+                >
+                    <h3 style="color: var(--text-muted); font-size: 1rem">Total Workouts</h3>
+                    <p style="font-size: 2rem; color: var(--primary); font-weight: bold"><%= stats.totalWorkouts %></p>
+                </div>
+                <div
+                    style="
+                        background: var(--surface);
+                        padding: 20px;
+                        border-radius: 12px;
+                        text-align: center;
+                        border: 1px solid #3b82f6;
+                    "
+                >
+                    <h3 style="color: var(--text-muted); font-size: 1rem">Today's Water</h3>
+                    <p style="font-size: 2rem; color: #60a5fa; font-weight: bold"><%= stats.todayWater %>ml</p>
+                </div>
+            </div>
+        </section>
+        <% } %> <% if (recentActivity) { %>
         <section class="content-section" style="margin-top: 40px">
             <h2>Recent Activity</h2>
             <div

@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+console.log("Fitness routes loaded");
 const { check, validationResult } = require("express-validator");
 const auditLog = require("./audit");
 
@@ -18,6 +19,7 @@ router.get("/add", (req, res) => {
         title: "Bitality - Add Workout",
         errors: null,
         success: null,
+        activity_type: req.query.activity_name || "",
     });
 });
 
@@ -40,6 +42,7 @@ router.post(
                 title: "Bitality - Add Workout",
                 errors: errors.array(),
                 success: null,
+                activity_type: req.body.activity_type || "",
             });
         }
 
@@ -55,6 +58,7 @@ router.post(
                     title: "Bitality - Add Workout",
                     errors: [{ msg: "Database error" }],
                     success: null,
+                    activity_type: activity_type,
                 });
             }
 
@@ -69,10 +73,127 @@ router.post(
                 title: "Bitality - Add Workout",
                 errors: null,
                 success: "Workout added successfully!",
+                activity_type: "",
             });
         });
     }
 );
+
+router.get("/exercises", (req, res) => {
+    console.log("HIT /exercises route");
+    res.render("exercises_page", {
+        title: "Bitality - Find Exercises",
+        exercises: null,
+        selectedMuscle: "",
+    });
+});
+
+router.get("/exercises/search", async (req, res) => {
+    const muscle = req.query.muscle;
+    if (!muscle) return res.redirect("/fitness/exercises");
+
+    try {
+        const response = await fetch(`https://api.api-ninjas.com/v1/exercises?muscle=${muscle}`, {
+            headers: { "X-Api-Key": process.env.API_NINJAS_KEY },
+        });
+
+        if (!response.ok) {
+            throw new Error(`API Error: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        res.render("exercises_page", {
+            title: "Bitality - Find Exercises",
+            exercises: data,
+            selectedMuscle: muscle,
+        });
+    } catch (error) {
+        console.error(error);
+        res.render("exercises_page", {
+            title: "Bitality - Find Exercises",
+            exercises: [],
+            selectedMuscle: muscle,
+        });
+    }
+});
+
+router.get("/nutrition", (req, res) => {
+    const userId = req.session.userId || 1;
+    const query = "SELECT * FROM nutrition_logs WHERE user_id = ? ORDER BY date DESC LIMIT 10";
+
+    req.db.query(query, [userId], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.render("nutrition_page", {
+                title: "Bitality - Nutrition Tracker",
+                analysis: null,
+                history: [],
+                query: "",
+            });
+        }
+        res.render("nutrition_page", {
+            title: "Bitality - Nutrition Tracker",
+            analysis: null,
+            history: results,
+            query: "",
+        });
+    });
+});
+
+router.post("/nutrition/analyze", async (req, res) => {
+    const queryText = req.body.query;
+    const userId = req.session.userId || 1;
+
+    // Get history for re-rendering
+    const historySql = "SELECT * FROM nutrition_logs WHERE user_id = ? ORDER BY date DESC LIMIT 10";
+
+    req.db.query(historySql, [userId], async (dbErr, historyResults) => {
+        if (!queryText) return res.redirect("/fitness/nutrition");
+
+        try {
+            const response = await fetch(
+                `https://api.calorieninjas.com/v1/nutrition?query=${encodeURIComponent(queryText)}`,
+                {
+                    headers: { "X-Api-Key": process.env.CALORIE_NINJAS_KEY },
+                }
+            );
+
+            if (!response.ok) throw new Error("API Error");
+            const data = await response.json();
+
+            res.render("nutrition_page", {
+                title: "Bitality - Nutrition Tracker",
+                analysis: data, // { items: [...] }
+                history: historyResults || [],
+                query: queryText,
+            });
+        } catch (error) {
+            console.error(error);
+            res.render("nutrition_page", {
+                title: "Bitality - Nutrition Tracker",
+                analysis: null,
+                history: historyResults || [],
+                query: queryText,
+                error: "Could not analyze food.",
+            });
+        }
+    });
+});
+
+router.post("/nutrition/log", (req, res) => {
+    const { meal_name, calories, protein, fat, carbs } = req.body;
+    const userId = req.session.userId || 1;
+
+    const sql =
+        "INSERT INTO nutrition_logs (meal_name, calories, protein, fat, carbs, user_id) VALUES (?, ?, ?, ?, ?, ?)";
+    req.db.query(sql, [meal_name, calories, protein, fat, carbs, userId], (err, result) => {
+        if (err) console.error(err);
+
+        auditLog(req.db, req.session.username, "LOG_MEAL", `Meal: ${meal_name}, Cal: ${Number(calories).toFixed(0)}`);
+        res.redirect("/fitness/nutrition");
+    });
+});
 
 router.get("/search", (req, res) => {
     const query = req.query.q;
@@ -154,32 +275,64 @@ router.get("/tips", (req, res) => {
 });
 
 router.get("/water", (req, res) => {
-    const totalWater = req.session.waterIntake || 0;
-    res.render("water_page", {
-        title: "Bitality - Water Tracker",
-        totalWater: totalWater,
-        message: null,
+    const userId = req.session.userId || 1;
+    // Get total water for today
+    const query = "SELECT SUM(amount) as total FROM water_logs WHERE user_id = ? AND DATE(date) = CURDATE()";
+    req.db.query(query, [userId], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.render("water_page", {
+                title: "Bitality - Water Tracker",
+                totalWater: 0,
+                message: "Error fetching data",
+            });
+        }
+        res.render("water_page", {
+            title: "Bitality - Water Tracker",
+            totalWater: results[0].total || 0,
+            message: null,
+        });
     });
 });
 
 router.post("/water", (req, res) => {
     const amount = parseInt(req.body.amount);
-    if (amount > 0) {
-        req.session.waterIntake = (req.session.waterIntake || 0) + amount;
+    const userId = req.session.userId || 1;
 
-        req.session.save((err) => {
+    if (amount > 0) {
+        const query = "INSERT INTO water_logs (amount, user_id) VALUES (?, ?)";
+        req.db.query(query, [amount, userId], (err, result) => {
+            if (err) {
+                console.error(err);
+                return res.render("water_page", {
+                    title: "Bitality - Water Tracker",
+                    totalWater: 0,
+                    message: "Database error",
+                });
+            }
+
             auditLog(req.db, req.session.username, "ADD_WATER", `Amount: ${amount}ml`);
-            res.render("water_page", {
-                title: "Bitality - Water Tracker",
-                totalWater: req.session.waterIntake,
-                message: `Added ${amount}ml!`,
+
+            // Get updated total
+            const totalQuery =
+                "SELECT SUM(amount) as total FROM water_logs WHERE user_id = ? AND DATE(date) = CURDATE()";
+            req.db.query(totalQuery, [userId], (err, results) => {
+                res.render("water_page", {
+                    title: "Bitality - Water Tracker",
+                    totalWater: results[0].total || 0,
+                    message: `Added ${amount}ml!`,
+                });
             });
         });
     } else {
-        res.render("water_page", {
-            title: "Bitality - Water Tracker",
-            totalWater: req.session.waterIntake || 0,
-            message: "Please enter a valid amount.",
+        // Need to fetch current total again to render the page correctly
+        const query = "SELECT SUM(amount) as total FROM water_logs WHERE user_id = ? AND DATE(date) = CURDATE()";
+        req.db.query(query, [userId], (err, results) => {
+            res.render("water_page", {
+                title: "Bitality - Water Tracker",
+                totalWater: results ? results[0].total || 0 : 0,
+                message: "Please enter a valid amount.",
+            });
         });
     }
 });
