@@ -16,7 +16,7 @@ router.get("/", (req, res) => {
         req.db.query(recentQuery, [userId], (err, recentResults) => {
             if (err) {
                 console.error(err);
-                return res.render("start_page", {
+                return res.render("index", {
                     title: "Bitality - Home",
                     recentActivity: [],
                     stats: null,
@@ -26,14 +26,14 @@ router.get("/", (req, res) => {
             req.db.query(statsQuery, [userId, userId, userId], (err, statsResults) => {
                 if (err) {
                     console.error(err);
-                    return res.render("start_page", {
+                    return res.render("index", {
                         title: "Bitality - Home",
                         recentActivity: recentResults,
                         stats: null,
                     });
                 }
 
-                res.render("start_page", {
+                res.render("index", {
                     title: "Bitality - Home",
                     recentActivity: recentResults,
                     stats: statsResults[0],
@@ -41,7 +41,7 @@ router.get("/", (req, res) => {
             });
         });
     } else {
-        res.render("start_page", {
+        res.render("index", {
             title: "Bitality - Home",
             recentActivity: null,
             stats: null,

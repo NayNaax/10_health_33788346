@@ -1,0 +1,112 @@
+Health and Fitness App Report
+
+OUTLINE
+
+Bitality is a comprehensive web-based health and fitness application designed to help individuals track their physical activity and monitor their health metrics. The application allows users to securely log and view their daily workouts, including details such as activity type, duration, calories burned, and intensity intensity. Beyond simple logging, Bitality provides valuable health tools including BMI (Body Mass Index), BMR (Basal Metabolic Rate), and Macronutrient calculators to better inform user health decisions. Integrated charting and dashboard widgets offer visual feedback on progress. The platform prioritizes user privacy with secure authentication and session management, while a responsive, high-contrast "Dark Mode" design ensures accessibility and a premium user experience across devices. The goal is to provide an intuitive, all-in-one platform for personal health management.
+
+ARCHITECTURE
+
+The application utilizes a classic Three-Tier Architecture implemented via the Model-View-Controller (MVC) pattern:
+
+1.  Presentation Tier (View): EJS templates render dynamic HTML pages on the server, served to the client browser.
+2.  Application Tier (Controller): Node.js and Express handle routing, business logic, authentication, and request processing.
+3.  Data Tier (Model): A MySQL database securely stores relational data for users, fitness logs, and audit trails.
+
+DATA MODEL
+
+The database schema (health) is normalized and consists of three primary tables:
+
+1.  users: Manages authentication (ID, unique username, password).
+2.  fitness_logs: Stores workout activities. It has a Foreign Key (user_id) relationship with users (One-to-Many).
+3.  audit_logs: Tracks system events for security and debugging.
+4.  water_logs: Stores daily water intake records for persistence.
+5.  nutrition_logs: Stores meal data (name, calories, protein, carb, fat) for nutrition tracking.
+
+USER FUNCTIONALITY
+
+Authentication & Profiles
+Users must register and login to access personal data. The system enforces strong passwords for security.
+
+Dashboard & User Experience
+Upon login, the Home Dashboard greets users with "Quick Stats" widgets displaying their total calories burned, total workouts, and daily water intake at a glance, followed by their recent activity.
+
+[Dashboard Screenshot omitted]
+
+Workout Logging
+The Add Workout feature allows users to log exercises with specific metrics like duration, calories, and intensity. This data is validated server-side to ensure accuracy (e.g., positive integers).
+
+[Add Workout Screenshot omitted]
+
+Search & History
+A robust Search function filters workout history by activity type, allowing users to quickly find past runs, swims, or cycles.
+
+Health Tools
+Bitality includes a suite of calculators:
+-   BMI Calculator: Assesses weight category.
+-   BMR Calculator: Estimates daily caloric needs.
+-   Macro Calculator: Suggests nutrient splits based on fitness goals (lose/gain weight).
+-   Exercise Finder: Uses the API Ninjas Exercises API to let users discover new workouts by muscle group and seamlessly log them.
+-   Nutrition Tracker: Users can type natural language meal descriptions (e.g., "1 avocado and 2 eggs"). The app uses the CalorieNinjas API to analyze the text and save a detailed nutrition breakdown (Calories, Macros).
+
+Utilities
+-   Water Tracker: A persistent daily counter for hydration goals, stored in the database so progress isn't lost on logout.
+-   Audit Log: A transparency feature allowing users to view recorded system actions associated with their account.
+
+ADVANCED TECHNIQUES
+
+1. Model-View-Controller (MVC) Pattern
+The codebase is structured to strictly separate concerns. Routes (routes/fitness.js) handle logic, Views (views/*.ejs) handle display, and the Database handles storage. This improves maintainability compared to monolithic scripts.
+
+2. Custom Middleware for Security
+I implemented custom middleware 'requireLogin' to protect sensitive routes. This ensures that unauthenticated users cannot access or modify fitness data using forced redirection.
+
+Reference: routes/fitness.js
+
+    const requireLogin = (req, res, next) => {
+        if (req.session.loggedin) {
+            next();
+        } else {
+            res.redirect("/users/login");
+        }
+    };
+    router.use(requireLogin);
+
+3. Server-Side Validation & Sanitization
+Using 'express-validator', input is rigorously checked and sanitized before touching the database. This prevents SQL injection and bad data entry (e.g., negative calories).
+
+Reference: routes/fitness.js
+
+    check("duration").isInt({ min: 1 }).withMessage("Duration must be a positive number"),
+    // ...
+    const errors = validationResult(req);
+
+4. Design System with CSS Variables
+A custom "Dark Mode" theme was built using CSS Custom Properties (--bg-color, --accent). This allows for dynamic client-side theming without page reloads, toggled via a simple JS script that updates the body class.
+
+5. Complex SQL Aggregation
+The dashboard utilizes complex SQL with subqueries to efficiently fetch summary statistics (Calories, Workouts, Water) in a single database round-trip, optimizing performance and reducing server load.
+
+Reference: routes/main.js
+
+    const statsQuery = `
+        SELECT
+            COALESCE((SELECT SUM(calories_burned) FROM fitness_logs...), 0) as totalCalories,
+            COALESCE((SELECT COUNT(*) FROM fitness_logs...), 0) as totalWorkouts,
+            ...
+    `;
+
+6. External API Integration
+The application integrates with the API Ninjas Exercises API using Node.js 'fetch'. This feature demonstrates asynchronous data handling (async/await) and third-party service consumption to enrich the user experience with real-world fitness data.
+
+Reference: routes/fitness.js
+
+    const response = await fetch(`https://api.api-ninjas.com/v1/exercises?muscle=${muscle}`, {
+        headers: { "X-Api-Key": process.env.API_NINJAS_KEY },
+    });
+
+AI DECLARATION
+
+I used Google's Gemini AI to help debug problems and aid during development.
+
+-   Debugging: The AI helped identify and fix a missing database route for the Audit Log feature and corrected 'init_db.js' configuration credential mismatches.
+-   Database Queries: The AI helped me with sql commands to fix databases which were repeating or duplicated.

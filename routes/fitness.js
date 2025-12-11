@@ -15,7 +15,7 @@ const requireLogin = (req, res, next) => {
 router.use(requireLogin);
 
 router.get("/add", (req, res) => {
-    res.render("input_page", {
+    res.render("add_workout", {
         title: "Bitality - Add Workout",
         errors: null,
         success: null,
@@ -38,7 +38,7 @@ router.post(
     (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.render("input_page", {
+            return res.render("add_workout", {
                 title: "Bitality - Add Workout",
                 errors: errors.array(),
                 success: null,
@@ -54,7 +54,7 @@ router.post(
         req.db.query(query, [activity_type, duration, calories, intensity, userId], (err, result) => {
             if (err) {
                 console.error(err);
-                return res.render("input_page", {
+                return res.render("add_workout", {
                     title: "Bitality - Add Workout",
                     errors: [{ msg: "Database error" }],
                     success: null,
@@ -69,7 +69,7 @@ router.post(
                 `Type: ${activity_type}, Duration: ${duration}, Cal: ${calories}, Intensity: ${intensity}`
             );
 
-            res.render("input_page", {
+            res.render("add_workout", {
                 title: "Bitality - Add Workout",
                 errors: null,
                 success: "Workout added successfully!",
@@ -81,7 +81,7 @@ router.post(
 
 router.get("/exercises", (req, res) => {
     console.log("HIT /exercises route");
-    res.render("exercises_page", {
+    res.render("exercises", {
         title: "Bitality - Find Exercises",
         exercises: null,
         selectedMuscle: "",
@@ -103,14 +103,14 @@ router.get("/exercises/search", async (req, res) => {
 
         const data = await response.json();
 
-        res.render("exercises_page", {
+        res.render("exercises", {
             title: "Bitality - Find Exercises",
             exercises: data,
             selectedMuscle: muscle,
         });
     } catch (error) {
         console.error(error);
-        res.render("exercises_page", {
+        res.render("exercises", {
             title: "Bitality - Find Exercises",
             exercises: [],
             selectedMuscle: muscle,
@@ -125,14 +125,14 @@ router.get("/nutrition", (req, res) => {
     req.db.query(query, [userId], (err, results) => {
         if (err) {
             console.error(err);
-            return res.render("nutrition_page", {
+            return res.render("nutrition", {
                 title: "Bitality - Nutrition Tracker",
                 analysis: null,
                 history: [],
                 query: "",
             });
         }
-        res.render("nutrition_page", {
+        res.render("nutrition", {
             title: "Bitality - Nutrition Tracker",
             analysis: null,
             history: results,
@@ -162,7 +162,7 @@ router.post("/nutrition/analyze", async (req, res) => {
             if (!response.ok) throw new Error("API Error");
             const data = await response.json();
 
-            res.render("nutrition_page", {
+            res.render("nutrition", {
                 title: "Bitality - Nutrition Tracker",
                 analysis: data, // { items: [...] }
                 history: historyResults || [],
@@ -170,7 +170,7 @@ router.post("/nutrition/analyze", async (req, res) => {
             });
         } catch (error) {
             console.error(error);
-            res.render("nutrition_page", {
+            res.render("nutrition", {
                 title: "Bitality - Nutrition Tracker",
                 analysis: null,
                 history: historyResults || [],
@@ -199,7 +199,7 @@ router.get("/search", (req, res) => {
     const query = req.query.q;
 
     if (!query) {
-        return res.render("search_page", {
+        return res.render("search", {
             title: "Bitality - Search",
             workouts: [],
             search_term: "",
@@ -215,7 +215,7 @@ router.get("/search", (req, res) => {
 
         auditLog(req.db, req.session.username, "SEARCH_WORKOUT", `Query: ${query}`);
 
-        res.render("search_page", {
+        res.render("search", {
             title: "Bitality - Search Results",
             workouts: results,
             search_term: query,
@@ -224,7 +224,7 @@ router.get("/search", (req, res) => {
 });
 
 router.get("/bmi", (req, res) => {
-    res.render("bmi_page", {
+    res.render("bmi", {
         title: "Bitality - BMI Calculator",
         bmi: null,
         status: null,
@@ -234,7 +234,7 @@ router.get("/bmi", (req, res) => {
 router.post("/bmi", (req, res) => {
     const { weight, height } = req.body;
     if (!weight || !height) {
-        return res.render("bmi_page", {
+        return res.render("bmi", {
             title: "Bitality - BMI Calculator",
             bmi: null,
             status: "Please enter both weight and height.",
@@ -251,7 +251,7 @@ router.post("/bmi", (req, res) => {
 
     auditLog(req.db, req.session.username, "CALCULATE_BMI", `BMI: ${bmi}, Status: ${status}`);
 
-    res.render("bmi_page", {
+    res.render("bmi", {
         title: "Bitality - BMI Calculator",
         bmi: bmi,
         status: `Status: ${status}`,
@@ -268,7 +268,7 @@ router.get("/tips", (req, res) => {
         { title: "Listen to your Body", content: "If you feel pain, stop. Don't push through injury." },
         { title: "Consistency", content: "Consistency is key. Small steps every day add up." },
     ];
-    res.render("tips_page", {
+    res.render("tips", {
         title: "Bitality - Health Tips",
         tips: tips,
     });
@@ -281,13 +281,13 @@ router.get("/water", (req, res) => {
     req.db.query(query, [userId], (err, results) => {
         if (err) {
             console.error(err);
-            return res.render("water_page", {
+            return res.render("water", {
                 title: "Bitality - Water Tracker",
                 totalWater: 0,
                 message: "Error fetching data",
             });
         }
-        res.render("water_page", {
+        res.render("water", {
             title: "Bitality - Water Tracker",
             totalWater: results[0].total || 0,
             message: null,
@@ -304,7 +304,7 @@ router.post("/water", (req, res) => {
         req.db.query(query, [amount, userId], (err, result) => {
             if (err) {
                 console.error(err);
-                return res.render("water_page", {
+                return res.render("water", {
                     title: "Bitality - Water Tracker",
                     totalWater: 0,
                     message: "Database error",
@@ -317,7 +317,7 @@ router.post("/water", (req, res) => {
             const totalQuery =
                 "SELECT SUM(amount) as total FROM water_logs WHERE user_id = ? AND DATE(date) = CURDATE()";
             req.db.query(totalQuery, [userId], (err, results) => {
-                res.render("water_page", {
+                res.render("water", {
                     title: "Bitality - Water Tracker",
                     totalWater: results[0].total || 0,
                     message: `Added ${amount}ml!`,
@@ -328,7 +328,7 @@ router.post("/water", (req, res) => {
         // Need to fetch current total again to render the page correctly
         const query = "SELECT SUM(amount) as total FROM water_logs WHERE user_id = ? AND DATE(date) = CURDATE()";
         req.db.query(query, [userId], (err, results) => {
-            res.render("water_page", {
+            res.render("water", {
                 title: "Bitality - Water Tracker",
                 totalWater: results ? results[0].total || 0 : 0,
                 message: "Please enter a valid amount.",
@@ -338,7 +338,7 @@ router.post("/water", (req, res) => {
 });
 
 router.get("/bmr", (req, res) => {
-    res.render("bmr_page", {
+    res.render("bmr", {
         title: "Bitality - BMR Calculator",
         bmr: null,
     });
@@ -348,7 +348,7 @@ router.post("/bmr", (req, res) => {
     const { gender, weight, height, age } = req.body;
 
     if (!weight || !height || !age) {
-        return res.render("bmr_page", {
+        return res.render("bmr", {
             title: "Bitality - BMR Calculator",
             bmr: null,
         });
@@ -363,14 +363,14 @@ router.post("/bmr", (req, res) => {
 
     auditLog(req.db, req.session.username, "CALCULATE_BMR", `BMR: ${Math.round(bmr)}`);
 
-    res.render("bmr_page", {
+    res.render("bmr", {
         title: "Bitality - BMR Calculator",
         bmr: Math.round(bmr),
     });
 });
 
 router.get("/macros", (req, res) => {
-    res.render("macros_page", {
+    res.render("macros", {
         title: "Bitality - Macro Calculator",
         results: null,
     });
@@ -414,7 +414,7 @@ router.post("/macros", (req, res) => {
 
     auditLog(req.db, req.session.username, "CALCULATE_MACROS", `Goal: ${goal}, Result: ${Math.round(tdee)}kcal`);
 
-    res.render("macros_page", {
+    res.render("macros", {
         title: "Bitality - Macro Calculator",
         results: {
             calories: Math.round(tdee),
@@ -484,7 +484,7 @@ router.get("/audit", (req, res) => {
             console.error(err);
             return res.send("Database error");
         }
-        res.render("audit_page", {
+        res.render("audit_log", {
             title: "Bitality - Audit Logs",
             logs: results,
         });
