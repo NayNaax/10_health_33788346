@@ -4,19 +4,18 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title><%= title %></title>
-        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="<%= baseUrl %>/css/main.css" />
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet" />
     </head>
     <body>
         <%- include('partials/header') %>
 
-        <main class="content-section">
-            <h1>Register</h1>
-            <p>Create your account to start tracking.</p>
+        <div class="container" style="max-width: 400px; margin-top: 80px">
+            <h1 style="text-align: center; margin-bottom: 20px">Register</h1>
 
             <% if (errors) { %>
-            <div class="alert error">
-                <ul>
+            <div class="alert alert-error">
+                <ul style="margin: 0; padding-left: 20px">
                     <% errors.forEach(function(error) { %>
                     <li><%= error.msg %></li>
                     <% }); %>
@@ -24,25 +23,23 @@
             </div>
             <% } %>
 
-            <form action="/users/register" method="POST" class="styled-form">
+            <form action="<%= baseUrl %>/users/register" method="POST" class="styled-form">
                 <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" placeholder="Username" required />
+                    <label>Username</label>
+                    <input type="text" name="username" required minlength="3" />
                 </div>
-
                 <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Password" required />
-                    <small style="display: block; margin-top: 5px; color: #aaa">
-                        Must be at least 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char.
-                    </small>
+                    <label>Password</label>
+                    <input type="password" name="password" required minlength="8" />
+                    <small style="color: var(--text-muted)">Min 8 chars, 1 upper, 1 lower, 1 number, 1 symbol</small>
                 </div>
+                <button type="submit" class="btn-primary" style="width: 100%">Register</button>
 
-                <button type="submit" class="btn-cta">Register</button>
-                <p style="margin-top: 20px; text-align: center">
-                    Already have an account? <a href="/users/login" style="color: var(--primary)">Login</a>
+                <p style="text-align: center; margin-top: 15px">
+                    Already have an account?
+                    <a href="<%= baseUrl %>/users/login" style="color: var(--primary)">Login</a>
                 </p>
             </form>
-        </main>
+        </div>
     </body>
 </html>

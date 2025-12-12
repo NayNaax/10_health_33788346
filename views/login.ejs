@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title><%= title %></title>
-        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="<%= baseUrl %>/css/main.css" />
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet" />
     </head>
     <body>
@@ -18,7 +18,7 @@
             <div class="alert error"><%= error %></div>
             <% } %>
 
-            <form action="/users/login" method="POST" class="styled-form">
+            <form action="<%= baseUrl %>/users/login" method="POST" class="styled-form">
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" placeholder="Username" required />
@@ -32,7 +32,7 @@
                 <button type="submit" class="btn-cta">Login</button>
                 <p style="margin-top: 20px; text-align: center">
                     Don't have an account?
-                    <a href="/users/register" style="color: var(--primary)">Register</a>
+                    <a href="<%= baseUrl %>/users/register" style="color: var(--primary)">Register</a>
                 </p>
             </form>
         </main>

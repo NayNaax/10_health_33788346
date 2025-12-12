@@ -8,7 +8,7 @@ const requireLogin = (req, res, next) => {
     if (req.session.loggedin) {
         next();
     } else {
-        res.redirect("/users/login");
+        res.redirect((process.env.BASE_URL || "") + "/users/login");
     }
 };
 
@@ -90,7 +90,7 @@ router.get("/exercises", (req, res) => {
 
 router.get("/exercises/search", async (req, res) => {
     const muscle = req.query.muscle;
-    if (!muscle) return res.redirect("/fitness/exercises");
+    if (!muscle) return res.redirect((process.env.BASE_URL || "") + "/fitness/exercises");
 
     try {
         const response = await fetch(`https://api.api-ninjas.com/v1/exercises?muscle=${muscle}`, {
@@ -149,7 +149,7 @@ router.post("/nutrition/analyze", async (req, res) => {
     const historySql = "SELECT * FROM nutrition_logs WHERE user_id = ? ORDER BY date DESC LIMIT 10";
 
     req.db.query(historySql, [userId], async (dbErr, historyResults) => {
-        if (!queryText) return res.redirect("/fitness/nutrition");
+        if (!queryText) return res.redirect((process.env.BASE_URL || "") + "/fitness/nutrition");
 
         try {
             const response = await fetch(
@@ -191,7 +191,7 @@ router.post("/nutrition/log", (req, res) => {
         if (err) console.error(err);
 
         auditLog(req.db, req.session.username, "LOG_MEAL", `Meal: ${meal_name}, Cal: ${Number(calories).toFixed(0)}`);
-        res.redirect("/fitness/nutrition");
+        res.redirect((process.env.BASE_URL || "") + "/fitness/nutrition");
     });
 });
 
@@ -285,12 +285,14 @@ router.get("/water", (req, res) => {
                 title: "Bitality - Water Tracker",
                 totalWater: 0,
                 message: "Error fetching data",
+                baseUrl: process.env.BASE_URL,
             });
         }
         res.render("water", {
             title: "Bitality - Water Tracker",
             totalWater: results[0].total || 0,
             message: null,
+            baseUrl: process.env.BASE_URL,
         });
     });
 });
@@ -308,6 +310,7 @@ router.post("/water", (req, res) => {
                     title: "Bitality - Water Tracker",
                     totalWater: 0,
                     message: "Database error",
+                    baseUrl: process.env.BASE_URL,
                 });
             }
 
@@ -321,6 +324,7 @@ router.post("/water", (req, res) => {
                     title: "Bitality - Water Tracker",
                     totalWater: results[0].total || 0,
                     message: `Added ${amount}ml!`,
+                    baseUrl: process.env.BASE_URL,
                 });
             });
         });
@@ -332,6 +336,7 @@ router.post("/water", (req, res) => {
                 title: "Bitality - Water Tracker",
                 totalWater: results ? results[0].total || 0 : 0,
                 message: "Please enter a valid amount.",
+                baseUrl: process.env.BASE_URL,
             });
         });
     }

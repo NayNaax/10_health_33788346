@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title><%= title %></title>
-        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="<%= baseUrl %>/css/main.css" />
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet" />
     </head>
     <body>
@@ -14,7 +14,7 @@
             <h1>BMI Calculator</h1>
             <p>Calculate your Body Mass Index (BMI) to check your health status.</p>
 
-            <form action="/fitness/bmi" method="POST" class="styled-form">
+            <form action="<%= baseUrl %>/fitness/bmi" method="POST" class="styled-form">
                 <div class="form-group">
                     <label for="weight">Weight (kg)</label>
                     <input type="number" id="weight" name="weight" step="0.1" placeholder="e.g. 70" required />
