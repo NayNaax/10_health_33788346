@@ -83,7 +83,11 @@
                     </tbody>
                 </table>
 
-                <form action="/fitness/nutrition/log" method="POST" style="margin-top: 20px; text-align: right">
+                <form
+                    action="<%= basePath %>/fitness/nutrition/log"
+                    method="POST"
+                    style="margin-top: 20px; text-align: right"
+                >
                     <input type="hidden" name="meal_name" value="<%= query %>" />
                     <input type="hidden" name="calories" value="<%= totalCal %>" />
                     <input type="hidden" name="protein" value="<%= totalPro %>" />

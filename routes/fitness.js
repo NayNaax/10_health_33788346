@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-console.log("Fitness routes loaded");
+
 const { check, validationResult } = require("express-validator");
 const auditLog = require("./audit");
 
@@ -84,7 +84,6 @@ router.post(
 );
 
 router.get("/exercises", (req, res) => {
-    console.log("HIT /exercises route");
     res.render("exercises", {
         title: "Bitality - Find Exercises",
         exercises: null,
@@ -154,7 +153,6 @@ router.post("/nutrition/analyze", async (req, res) => {
     const queryText = req.body.query;
     const userId = req.session.userId || 1;
 
-    // Get history for re-rendering
     const historySql = "SELECT * FROM nutrition_logs WHERE user_id = ? ORDER BY date DESC LIMIT 10";
 
     req.db.query(historySql, [userId], async (dbErr, historyResults) => {
@@ -293,7 +291,6 @@ router.get("/tips", (req, res) => {
 
 router.get("/water", (req, res) => {
     const userId = req.session.userId || 1;
-    // Get total water for today
     const query = "SELECT SUM(amount) as total FROM water_logs WHERE user_id = ? AND DATE(date) = CURDATE()";
     req.db.query(query, [userId], (err, results) => {
         if (err) {
@@ -333,7 +330,6 @@ router.post("/water", (req, res) => {
 
             auditLog(req.db, req.session.username, "ADD_WATER", `Amount: ${amount}ml`);
 
-            // Get updated total
             const totalQuery =
                 "SELECT SUM(amount) as total FROM water_logs WHERE user_id = ? AND DATE(date) = CURDATE()";
             req.db.query(totalQuery, [userId], (err, results) => {
@@ -346,7 +342,6 @@ router.post("/water", (req, res) => {
             });
         });
     } else {
-        // Need to fetch current total again to render the page correctly
         const query = "SELECT SUM(amount) as total FROM water_logs WHERE user_id = ? AND DATE(date) = CURDATE()";
         req.db.query(query, [userId], (err, results) => {
             res.render("water", {
@@ -405,7 +400,6 @@ router.get("/macros", (req, res) => {
 router.post("/macros", (req, res) => {
     const { weight, goal, activity } = req.body;
 
-    // Simple estimation logic
     let multiplier;
     switch (activity) {
         case "sedentary":
@@ -424,7 +418,6 @@ router.post("/macros", (req, res) => {
             multiplier = 1.2;
     }
 
-    // Base BMR estimate (very rough simple formula: weight * 24)
     const bmr = weight * 24;
     let tdee = bmr * multiplier;
 
@@ -455,7 +448,6 @@ router.post("/macros", (req, res) => {
 router.get("/profile", (req, res) => {
     const userId = req.session.userId || 1;
 
-    // Get aggregate stats
     const statsQuery =
         "SELECT COUNT(*) as count, SUM(calories_burned) as calories, SUM(duration) as duration FROM fitness_logs WHERE user_id = ?";
 
@@ -471,12 +463,10 @@ router.get("/profile", (req, res) => {
             });
         }
 
-        // Get recent activity
         const recentQuery = "SELECT * FROM fitness_logs WHERE user_id = ? ORDER BY date DESC LIMIT 5";
         req.db.query(recentQuery, [userId], (err, recentResult) => {
             if (err) {
                 console.error(err);
-                // Render with stats but no recent activity on error
                 return res.render("profile", {
                     title: "Bitality - Profile",
                     user: req.session.username,

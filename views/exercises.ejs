@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title><%= title %></title>
-        <link rel="stylesheet" href="/css/main.css" />
+        <link rel="stylesheet" href="<%= basePath %>/css/main.css" />
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet" />
     </head>
     <body>
@@ -14,7 +14,7 @@
             <h1>Find Exercises</h1>
             <p>Search for exercises by muscle group to add to your workout.</p>
 
-            <form action="/fitness/exercises/search" method="GET" class="styled-form" style="max-width: 500px; margin: 0 auto;">
+            <form action="<%= basePath %>/fitness/exercises/search" method="GET" class="styled-form" style="max-width: 500px; margin: 0 auto;">
             <p>Search for exercises by muscle group to get inspiration.</p>
 
             <form action="<%= basePath %>/fitness/exercises/search" method="GET" class="styled-form" style="max-width: 500px; margin: 0 auto;">
