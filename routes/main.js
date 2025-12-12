@@ -20,7 +20,7 @@ router.get("/", (req, res) => {
                     title: "Bitality - Home",
                     recentActivity: [],
                     stats: null,
-                    basePath: process.env.BASE_URL,
+                    basePath: res.locals.baseUrl,
                 });
             }
 
@@ -31,7 +31,7 @@ router.get("/", (req, res) => {
                         title: "Bitality - Home",
                         recentActivity: recentResults,
                         stats: null,
-                        basePath: process.env.BASE_URL,
+                        basePath: res.locals.baseUrl,
                     });
                 }
 
@@ -39,7 +39,7 @@ router.get("/", (req, res) => {
                     title: "Bitality - Home",
                     recentActivity: recentResults,
                     stats: statsResults[0],
-                    basePath: process.env.BASE_URL,
+                    basePath: res.locals.baseUrl,
                 });
             });
         });
@@ -48,7 +48,7 @@ router.get("/", (req, res) => {
             title: "Bitality - Home",
             recentActivity: null,
             stats: null,
-            basePath: process.env.BASE_URL,
+            basePath: res.locals.baseUrl,
         });
     }
 });
@@ -56,7 +56,7 @@ router.get("/", (req, res) => {
 router.get("/about", (req, res) => {
     res.render("about", {
         title: "Bitality - About",
-        basePath: process.env.BASE_URL,
+        basePath: res.locals.baseUrl,
     });
 });
 
