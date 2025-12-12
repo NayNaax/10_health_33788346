@@ -36,6 +36,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use((req, res, next) => {
     req.db = db;
     res.locals.user = req.session.loggedin ? req.session.username : null;
+    res.locals.baseUrl = process.env.BASE_URL || "";
     next();
 });
 

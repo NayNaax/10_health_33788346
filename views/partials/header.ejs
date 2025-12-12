@@ -1,30 +1,33 @@
 <header class="main-header">
     <div class="logo">Bitality</div>
     <nav>
-        <a href="/">Home</a>
-        <a href="/about">About</a>
-        <a href="/fitness/add">Add Workout</a>
-        <a href="/fitness/search">Search</a>
+        <a href="<%= baseUrl %>/">Home</a>
+        <a href="<%= baseUrl %>/about">About</a>
+        <a href="<%= baseUrl %>/fitness/add">Add Workout</a>
+        <a href="<%= baseUrl %>/fitness/search">Search</a>
         <div class="dropdown">
             <a href="#" style="pointer-events: none">Fitness Tools ▾</a>
             <div class="dropdown-content">
-                <a href="/fitness/bmi">BMI Calculator</a>
-                <a href="/fitness/bmr">BMR Calculator</a>
-                <a href="/fitness/macros">Macro Calculator</a>
-                <a href="/fitness/nutrition">Nutrition Tracker</a>
-                <a href="/fitness/water">Water Tracker</a>
-                <a href="/fitness/exercises">Find Exercises</a>
-                <a href="/fitness/tips">Health Tips</a>
+                <a href="<%= baseUrl %>/fitness/bmi">BMI Calculator</a>
+                <a href="<%= baseUrl %>/fitness/bmr">BMR Calculator</a>
+                <a href="<%= baseUrl %>/fitness/macros">Macro Calculator</a>
+                <a href="<%= baseUrl %>/fitness/nutrition">Nutrition Tracker</a>
+                <a href="<%= baseUrl %>/fitness/water">Water Tracker</a>
+                <a href="<%= baseUrl %>/fitness/exercises">Find Exercises</a>
+                <a href="<%= baseUrl %>/fitness/tips">Health Tips</a>
             </div>
         </div>
         <% if (user) { %>
         <span style="color: var(--text-muted); margin: 0 10px"
-            >Hi, <a href="/fitness/profile" style="color: var(--accent); font-weight: bold"><%= user %></a></span
+            >Hi,
+            <a href="<%= baseUrl %>/fitness/profile" style="color: var(--accent); font-weight: bold"
+                ><%= user %></a
+            ></span
         >
-        <a href="/fitness/audit">View Logs</a>
-        <a href="/users/logout" class="btn-login" style="background-color: #ef4444">Logout</a>
+        <a href="<%= baseUrl %>/fitness/audit">View Logs</a>
+        <a href="<%= baseUrl %>/users/logout" class="btn-login" style="background-color: #ef4444">Logout</a>
         <% } else { %>
-        <a href="/users/login" class="btn-login">Login</a>
+        <a href="<%= baseUrl %>/users/login" class="btn-login">Login</a>
         <% } %>
         <button
             id="theme-toggle"
