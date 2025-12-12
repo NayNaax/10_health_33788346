@@ -7,7 +7,7 @@ router.get("/login", (req, res) => {
     res.render("login", {
         title: "Bitality - Login",
         error: null,
-        basePath: process.env.BASE_URL,
+        basePath: res.locals.baseUrl,
     });
 });
 
@@ -24,7 +24,7 @@ router.post("/login", (req, res) => {
             return res.render("login", {
                 title: "Bitality - Login",
                 error: "An error occurred. Please try again.",
-                basePath: process.env.BASE_URL,
+                basePath: res.locals.baseUrl,
             });
         }
 
@@ -35,13 +35,13 @@ router.post("/login", (req, res) => {
 
             auditLog(req.db, username, "LOGIN", "User logged in successfully");
 
-            res.redirect((process.env.BASE_URL || "") + "/");
+            res.redirect((res.locals.baseUrl || "") + "/");
         } else {
             auditLog(req.db, username, "LOGIN_FAIL", "Failed login attempt");
             res.render("login", {
                 title: "Bitality - Login",
                 error: "Invalid username or password",
-                basePath: process.env.BASE_URL,
+                basePath: res.locals.baseUrl,
             });
         }
     });
@@ -55,7 +55,7 @@ router.get("/logout", (req, res) => {
         if (err) {
             console.error(err);
         }
-        res.redirect((process.env.BASE_URL || "") + "/");
+        res.redirect((res.locals.baseUrl || "") + "/");
     });
 });
 
@@ -63,7 +63,7 @@ router.get("/register", (req, res) => {
     res.render("register", {
         title: "Bitality - Register",
         errors: null,
-        basePath: process.env.BASE_URL,
+        basePath: res.locals.baseUrl,
     });
 });
 
@@ -89,7 +89,7 @@ router.post(
             return res.render("register", {
                 title: "Bitality - Register",
                 errors: errors.array(),
-                basePath: process.env.BASE_URL,
+                basePath: res.locals.baseUrl,
             });
         }
 
@@ -101,7 +101,7 @@ router.post(
                 return res.render("register", {
                     title: "Bitality - Register",
                     errors: [{ msg: "Database error" }],
-                    basePath: process.env.BASE_URL,
+                    basePath: res.locals.baseUrl,
                 });
             }
 
@@ -109,7 +109,7 @@ router.post(
                 return res.render("register", {
                     title: "Bitality - Register",
                     errors: [{ msg: "Username already exists" }],
-                    basePath: process.env.BASE_URL,
+                    basePath: res.locals.baseUrl,
                 });
             }
 
@@ -122,11 +122,11 @@ router.post(
                         return res.render("register", {
                             title: "Bitality - Register",
                             errors: [{ msg: "Error registering user" }],
-                            basePath: process.env.BASE_URL,
+                            basePath: res.locals.baseUrl,
                         });
                     }
                     auditLog(req.db, username, "REGISTER", "New user registered");
-                    res.redirect((process.env.BASE_URL || "") + "/users/login");
+                    res.redirect((res.locals.baseUrl || "") + "/users/login");
                 }
             );
         });
