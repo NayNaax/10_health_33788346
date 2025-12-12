@@ -8,6 +8,9 @@ const path = require("path");
 
 const app = express();
 const port = 8000;
+// Optional base path for VM hosting under a subdirectory (e.g., /usr/355)
+// Leave empty or unset for localhost to serve from root.
+const basePath = (process.env.BASE_PATH || "").trim();
 
 const dbConfig = {
     host: process.env.HEALTH_HOST || "localhost",
@@ -21,7 +24,12 @@ const db = mysql.createPool(dbConfig);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, "public")));
+// Serve static files appropriately for local and VM
+if (basePath) {
+    app.use(basePath, express.static(path.join(__dirname, "public")));
+} else {
+    app.use(express.static(path.join(__dirname, "public")));
+}
 app.use(
     session({
         secret: "secret",
@@ -36,7 +44,8 @@ app.set("views", path.join(__dirname, "views"));
 app.use((req, res, next) => {
     req.db = db;
     res.locals.user = req.session.loggedin ? req.session.username : null;
-    res.locals.baseUrl = process.env.BASE_URL || "";
+    // Expose base path to views for building links
+    res.locals.baseUrl = basePath || "";
     next();
 });
 
@@ -44,10 +53,18 @@ const mainRoutes = require("./routes/main");
 const fitnessRoutes = require("./routes/fitness");
 const userRoutes = require("./routes/users");
 
-app.use("/", mainRoutes);
-app.use("/fitness", fitnessRoutes);
-app.use("/users", userRoutes);
+// Mount routes: under base path on VM, root for localhost
+if (basePath) {
+    app.use(basePath + "/", mainRoutes);
+    app.use(basePath + "/fitness", fitnessRoutes);
+    app.use(basePath + "/users", userRoutes);
+} else {
+    app.use("/", mainRoutes);
+    app.use("/fitness", fitnessRoutes);
+    app.use("/users", userRoutes);
+}
 
+// 404 handler (kept generic)
 app.use((req, res, next) => {
     res.status(404).send("Page not found");
 });
