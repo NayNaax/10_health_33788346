@@ -20,6 +20,7 @@ router.get("/add", (req, res) => {
         errors: null,
         success: null,
         activity_type: req.query.activity_name || "",
+        basePath: process.env.BASE_URL,
     });
 });
 
@@ -43,6 +44,7 @@ router.post(
                 errors: errors.array(),
                 success: null,
                 activity_type: req.body.activity_type || "",
+                basePath: process.env.BASE_URL,
             });
         }
 
@@ -59,6 +61,7 @@ router.post(
                     errors: [{ msg: "Database error" }],
                     success: null,
                     activity_type: activity_type,
+                    basePath: process.env.BASE_URL,
                 });
             }
 
@@ -74,6 +77,7 @@ router.post(
                 errors: null,
                 success: "Workout added successfully!",
                 activity_type: "",
+                basePath: process.env.BASE_URL,
             });
         });
     }
@@ -85,6 +89,7 @@ router.get("/exercises", (req, res) => {
         title: "Bitality - Find Exercises",
         exercises: null,
         selectedMuscle: "",
+        basePath: process.env.BASE_URL,
     });
 });
 
@@ -107,6 +112,7 @@ router.get("/exercises/search", async (req, res) => {
             title: "Bitality - Find Exercises",
             exercises: data,
             selectedMuscle: muscle,
+            basePath: process.env.BASE_URL,
         });
     } catch (error) {
         console.error(error);
@@ -114,6 +120,7 @@ router.get("/exercises/search", async (req, res) => {
             title: "Bitality - Find Exercises",
             exercises: [],
             selectedMuscle: muscle,
+            basePath: process.env.BASE_URL,
         });
     }
 });
@@ -130,6 +137,7 @@ router.get("/nutrition", (req, res) => {
                 analysis: null,
                 history: [],
                 query: "",
+                basePath: process.env.BASE_URL,
             });
         }
         res.render("nutrition", {
@@ -137,6 +145,7 @@ router.get("/nutrition", (req, res) => {
             analysis: null,
             history: results,
             query: "",
+            basePath: process.env.BASE_URL,
         });
     });
 });
@@ -167,6 +176,7 @@ router.post("/nutrition/analyze", async (req, res) => {
                 analysis: data, // { items: [...] }
                 history: historyResults || [],
                 query: queryText,
+                basePath: process.env.BASE_URL,
             });
         } catch (error) {
             console.error(error);
@@ -176,6 +186,7 @@ router.post("/nutrition/analyze", async (req, res) => {
                 history: historyResults || [],
                 query: queryText,
                 error: "Could not analyze food.",
+                basePath: process.env.BASE_URL,
             });
         }
     });
@@ -203,6 +214,7 @@ router.get("/search", (req, res) => {
             title: "Bitality - Search",
             workouts: [],
             search_term: "",
+            basePath: process.env.BASE_URL,
         });
     }
 
@@ -219,6 +231,7 @@ router.get("/search", (req, res) => {
             title: "Bitality - Search Results",
             workouts: results,
             search_term: query,
+            basePath: process.env.BASE_URL,
         });
     });
 });
@@ -228,6 +241,7 @@ router.get("/bmi", (req, res) => {
         title: "Bitality - BMI Calculator",
         bmi: null,
         status: null,
+        basePath: process.env.BASE_URL,
     });
 });
 
@@ -238,6 +252,7 @@ router.post("/bmi", (req, res) => {
             title: "Bitality - BMI Calculator",
             bmi: null,
             status: "Please enter both weight and height.",
+            basePath: process.env.BASE_URL,
         });
     }
 
@@ -255,6 +270,7 @@ router.post("/bmi", (req, res) => {
         title: "Bitality - BMI Calculator",
         bmi: bmi,
         status: `Status: ${status}`,
+        basePath: process.env.BASE_URL,
     });
 });
 
@@ -271,6 +287,7 @@ router.get("/tips", (req, res) => {
     res.render("tips", {
         title: "Bitality - Health Tips",
         tips: tips,
+        basePath: process.env.BASE_URL,
     });
 });
 
@@ -285,7 +302,7 @@ router.get("/water", (req, res) => {
                 title: "Bitality - Water Tracker",
                 totalWater: 0,
                 message: "Error fetching data",
-                baseUrl: process.env.BASE_URL,
+                basePath: process.env.BASE_URL,
             });
         }
         res.render("water", {
@@ -310,7 +327,7 @@ router.post("/water", (req, res) => {
                     title: "Bitality - Water Tracker",
                     totalWater: 0,
                     message: "Database error",
-                    baseUrl: process.env.BASE_URL,
+                    basePath: process.env.BASE_URL,
                 });
             }
 
@@ -324,7 +341,7 @@ router.post("/water", (req, res) => {
                     title: "Bitality - Water Tracker",
                     totalWater: results[0].total || 0,
                     message: `Added ${amount}ml!`,
-                    baseUrl: process.env.BASE_URL,
+                    basePath: process.env.BASE_URL,
                 });
             });
         });
@@ -336,7 +353,7 @@ router.post("/water", (req, res) => {
                 title: "Bitality - Water Tracker",
                 totalWater: results ? results[0].total || 0 : 0,
                 message: "Please enter a valid amount.",
-                baseUrl: process.env.BASE_URL,
+                basePath: process.env.BASE_URL,
             });
         });
     }
@@ -346,6 +363,7 @@ router.get("/bmr", (req, res) => {
     res.render("bmr", {
         title: "Bitality - BMR Calculator",
         bmr: null,
+        basePath: process.env.BASE_URL,
     });
 });
 
@@ -356,6 +374,7 @@ router.post("/bmr", (req, res) => {
         return res.render("bmr", {
             title: "Bitality - BMR Calculator",
             bmr: null,
+            basePath: process.env.BASE_URL,
         });
     }
 
@@ -371,6 +390,7 @@ router.post("/bmr", (req, res) => {
     res.render("bmr", {
         title: "Bitality - BMR Calculator",
         bmr: Math.round(bmr),
+        basePath: process.env.BASE_URL,
     });
 });
 
@@ -378,6 +398,7 @@ router.get("/macros", (req, res) => {
     res.render("macros", {
         title: "Bitality - Macro Calculator",
         results: null,
+        basePath: process.env.BASE_URL,
     });
 });
 
@@ -427,6 +448,7 @@ router.post("/macros", (req, res) => {
             carbs: carbs > 0 ? carbs : 0,
             fats: fats,
         },
+        basePath: process.env.BASE_URL,
     });
 });
 
@@ -445,6 +467,7 @@ router.get("/profile", (req, res) => {
                 user: req.session.username,
                 stats: { totalWorkouts: 0, totalCalories: 0, totalDuration: 0 },
                 recentActivity: [],
+                basePath: process.env.BASE_URL,
             });
         }
 
@@ -463,6 +486,7 @@ router.get("/profile", (req, res) => {
                         totalDuration: statsResult[0].duration || 0,
                     },
                     recentActivity: [],
+                    basePath: process.env.BASE_URL,
                 });
             }
 
@@ -477,6 +501,7 @@ router.get("/profile", (req, res) => {
                     totalDuration: statsResult[0].duration || 0,
                 },
                 recentActivity: recentResult,
+                basePath: process.env.BASE_URL,
             });
         });
     });
@@ -492,6 +517,7 @@ router.get("/audit", (req, res) => {
         res.render("audit_log", {
             title: "Bitality - Audit Logs",
             logs: results,
+            basePath: process.env.BASE_URL,
         });
     });
 });

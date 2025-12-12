@@ -1,33 +1,33 @@
 <header class="main-header">
     <div class="logo">Bitality</div>
     <nav>
-        <a href="<%= baseUrl %>/">Home</a>
-        <a href="<%= baseUrl %>/about">About</a>
-        <a href="<%= baseUrl %>/fitness/add">Add Workout</a>
-        <a href="<%= baseUrl %>/fitness/search">Search</a>
+        <a href="<%= basePath %>/">Home</a>
+        <a href="<%= basePath %>/about">About</a>
+        <a href="<%= basePath %>/fitness/add">Add Workout</a>
+        <a href="<%= basePath %>/fitness/search">Search</a>
         <div class="dropdown">
             <a href="#" style="pointer-events: none">Fitness Tools ▾</a>
             <div class="dropdown-content">
-                <a href="<%= baseUrl %>/fitness/bmi">BMI Calculator</a>
-                <a href="<%= baseUrl %>/fitness/bmr">BMR Calculator</a>
-                <a href="<%= baseUrl %>/fitness/macros">Macro Calculator</a>
-                <a href="<%= baseUrl %>/fitness/nutrition">Nutrition Tracker</a>
-                <a href="<%= baseUrl %>/fitness/water">Water Tracker</a>
-                <a href="<%= baseUrl %>/fitness/exercises">Find Exercises</a>
-                <a href="<%= baseUrl %>/fitness/tips">Health Tips</a>
+                <a href="<%= basePath %>/fitness/bmi">BMI Calculator</a>
+                <a href="<%= basePath %>/fitness/bmr">BMR Calculator</a>
+                <a href="<%= basePath %>/fitness/macros">Macro Calculator</a>
+                <a href="<%= basePath %>/fitness/nutrition">Nutrition Tracker</a>
+                <a href="<%= basePath %>/fitness/water">Water Tracker</a>
+                <a href="<%= basePath %>/fitness/exercises">Find Exercises</a>
+                <a href="<%= basePath %>/fitness/tips">Health Tips</a>
             </div>
         </div>
         <% if (user) { %>
         <span style="color: var(--text-muted); margin: 0 10px"
             >Hi,
-            <a href="<%= baseUrl %>/fitness/profile" style="color: var(--accent); font-weight: bold"
+            <a href="<%= basePath %>/fitness/profile" style="color: var(--accent); font-weight: bold"
                 ><%= user %></a
             ></span
         >
-        <a href="<%= baseUrl %>/fitness/audit">View Logs</a>
-        <a href="<%= baseUrl %>/users/logout" class="btn-login" style="background-color: #ef4444">Logout</a>
+        <a href="<%= basePath %>/fitness/audit">View Logs</a>
+        <a href="<%= basePath %>/users/logout" class="btn-login" style="background-color: #ef4444">Logout</a>
         <% } else { %>
-        <a href="<%= baseUrl %>/users/login" class="btn-login">Login</a>
+        <a href="<%= basePath %>/users/login" class="btn-login">Login</a>
         <% } %>
         <button
             id="theme-toggle"

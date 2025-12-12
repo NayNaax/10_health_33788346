@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title><%= title %></title>
-        <link rel="stylesheet" href="<%= baseUrl %>/css/main.css" />
+        <link rel="stylesheet" href="<%= basePath %>/css/main.css" />
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet" />
     </head>
     <body>
@@ -23,7 +23,7 @@
             </div>
             <% } %>
 
-            <form action="<%= baseUrl %>/users/register" method="POST" class="styled-form">
+            <form action="<%= basePath %>/users/register" method="POST" class="styled-form">
                 <div class="form-group">
                     <label>Username</label>
                     <input type="text" name="username" required minlength="3" />
@@ -37,7 +37,7 @@
 
                 <p style="text-align: center; margin-top: 15px">
                     Already have an account?
-                    <a href="<%= baseUrl %>/users/login" style="color: var(--primary)">Login</a>
+                    <a href="<%= basePath %>/users/login" style="color: var(--primary)">Login</a>
                 </p>
             </form>
         </div>
