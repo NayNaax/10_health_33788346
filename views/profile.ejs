@@ -13,84 +13,44 @@
         <main class="content-section">
             <h1>User Profile: <%= user %></h1>
 
-            <div
-                style="
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                    gap: 20px;
-                    margin-top: 30px;
-                "
-            >
-                <div
-                    style="
-                        background: var(--surface);
-                        padding: 20px;
-                        border-radius: 12px;
-                        text-align: center;
-                        border: 1px solid var(--primary);
-                    "
-                >
-                    <h3 style="color: var(--text-muted); font-size: 0.9rem">Total Workouts</h3>
-                    <p style="font-size: 2rem; font-weight: bold; color: white"><%= stats.totalWorkouts %></p>
+            <div class="grid-container grid-auto-fit margin-top-30">
+                <div class="card card-stat" style="border-color: var(--primary)">
+                    <h3 class="stat-label">Total Workouts</h3>
+                    <p class="stat-value"><%= stats.totalWorkouts %></p>
                 </div>
 
-                <div
-                    style="
-                        background: var(--surface);
-                        padding: 20px;
-                        border-radius: 12px;
-                        text-align: center;
-                        border: 1px solid var(--accent);
-                    "
-                >
-                    <h3 style="color: var(--text-muted); font-size: 0.9rem">Calories Burned</h3>
-                    <p style="font-size: 2rem; font-weight: bold; color: white"><%= stats.totalCalories %></p>
+                <div class="card card-stat" style="border-color: var(--accent)">
+                    <h3 class="stat-label">Calories Burned</h3>
+                    <p class="stat-value"><%= stats.totalCalories %></p>
                 </div>
 
-                <div
-                    style="
-                        background: var(--surface);
-                        padding: 20px;
-                        border-radius: 12px;
-                        text-align: center;
-                        border: 1px solid #ff6b6b;
-                    "
-                >
-                    <h3 style="color: var(--text-muted); font-size: 0.9rem">Active Minutes</h3>
-                    <p style="font-size: 2rem; font-weight: bold; color: white"><%= stats.totalDuration %></p>
+                <div class="card card-stat" style="border-color: #ff6b6b">
+                    <h3 class="stat-label">Active Minutes</h3>
+                    <p class="stat-value"><%= stats.totalDuration %></p>
                 </div>
             </div>
 
-            <div style="margin-top: 40px">
+            <div class="margin-top-40">
                 <h2>Recent Activity</h2>
                 <% if (recentActivity.length > 0) { %>
-                <table
-                    style="
-                        width: 100%;
-                        border-collapse: collapse;
-                        margin-top: 20px;
-                        background: var(--surface);
-                        border-radius: 8px;
-                        overflow: hidden;
-                    "
-                >
+                <table class="data-table">
                     <thead>
-                        <tr style="background: #1a1b26; text-align: left">
-                            <th style="padding: 15px; color: var(--text-muted)">Date</th>
-                            <th style="padding: 15px; color: var(--text-muted)">Activity</th>
-                            <th style="padding: 15px; color: var(--text-muted)">Duration</th>
-                            <th style="padding: 15px; color: var(--text-muted)">Calories</th>
-                            <th style="padding: 15px; color: var(--text-muted)">Intensity</th>
+                        <tr>
+                            <th>Date</th>
+                            <th>Activity</th>
+                            <th>Duration</th>
+                            <th>Calories</th>
+                            <th>Intensity</th>
                         </tr>
                     </thead>
                     <tbody>
                         <% recentActivity.forEach(function(activity) { %>
-                        <tr style="border-bottom: 1px solid #444">
-                            <td style="padding: 15px"><%= new Date(activity.date).toLocaleDateString() %></td>
-                            <td style="padding: 15px"><%= activity.activity_type %></td>
-                            <td style="padding: 15px"><%= activity.duration %> min</td>
-                            <td style="padding: 15px"><%= activity.calories_burned %></td>
-                            <td style="padding: 15px">
+                        <tr>
+                            <td><%= new Date(activity.date).toLocaleDateString() %></td>
+                            <td><%= activity.activity_type %></td>
+                            <td><%= activity.duration %> min</td>
+                            <td><%= activity.calories_burned %></td>
+                            <td>
                                 <span style="padding: 4px 8px; border-radius: 4px; background: #444; font-size: 0.8rem"
                                     ><%= activity.intensity || 'N/A' %></span
                                 >
@@ -100,12 +60,12 @@
                     </tbody>
                 </table>
                 <% } else { %>
-                <p style="color: var(--text-muted)">No recent activity found.</p>
+                <p class="text-muted">No recent activity found.</p>
                 <% } %>
             </div>
 
             <div style="margin-top: 40px; text-align: center">
-                <a href="<%= basePath %>/users/logout" class="btn-cta" style="background: #ef4444">Logout</a>
+                <a href="<%= basePath %>/users/logout" class="btn-cta btn-danger">Logout</a>
             </div>
         </main>
     </body>

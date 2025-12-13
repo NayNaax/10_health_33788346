@@ -18,30 +18,18 @@
             </div>
         </div>
         <% if (user) { %>
-        <span style="color: var(--text-muted); margin: 0 10px"
+        <span class="user-greeting"
             >Hi,
             <a href="<%= basePath %>/fitness/profile" style="color: var(--accent); font-weight: bold"
                 ><%= user %></a
             ></span
         >
         <a href="<%= basePath %>/fitness/audit">View Logs</a>
-        <a href="<%= basePath %>/users/logout" class="btn-login" style="background-color: #ef4444">Logout</a>
+        <a href="<%= basePath %>/users/logout" class="btn-login btn-danger">Logout</a>
         <% } else { %>
         <a href="<%= basePath %>/users/login" class="btn-login">Login</a>
         <% } %>
-        <button
-            id="theme-toggle"
-            style="
-                margin-left: 20px;
-                background: none;
-                border: none;
-                font-size: 1.5rem;
-                cursor: pointer;
-                color: var(--text);
-            "
-        >
-            🌙
-        </button>
+        <button id="theme-toggle" class="theme-toggle-btn">🌙</button>
 
         <script>
             const toggleBtn = document.getElementById("theme-toggle");

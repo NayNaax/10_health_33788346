@@ -214,3 +214,171 @@ nav a.active {
     outline: none;
     border-color: var(--primary);
 }
+
+/* --- Refactored Utility Classes --- */
+
+/* Grid Layouts */
+.grid-container {
+    display: grid;
+    gap: 20px;
+}
+.grid-auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+.grid-gap-15 {
+    gap: 15px;
+}
+.grid-gap-20 {
+    gap: 20px;
+}
+
+/* Cards */
+.card {
+    background-color: var(--surface);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--secondary);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.card-stat {
+    text-align: center;
+    border: 1px solid var(--primary);
+}
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--text);
+}
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* Tables */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--surface);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+.data-table th,
+.data-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #444;
+}
+.data-table th {
+    background-color: #1a1b26;
+    color: var(--text-muted);
+}
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+.data-table tr:hover {
+    background-color: rgba(255, 255, 255, 0.05); /* Subtle hover effect */
+}
+
+/* Text Utilities */
+.text-center {
+    text-align: center;
+}
+.text-right {
+    text-align: right;
+}
+.text-accent {
+    color: var(--accent);
+}
+.text-muted {
+    color: var(--text-muted);
+}
+.text-white {
+    color: var(--text);
+}
+.margin-top-20 {
+    margin-top: 20px;
+}
+.margin-top-30 {
+    margin-top: 30px;
+}
+.margin-top-40 {
+    margin-top: 40px;
+}
+.margin-bottom-10 {
+    margin-bottom: 10px;
+}
+.margin-bottom-20 {
+    margin-bottom: 20px;
+}
+
+/* Components */
+.theme-toggle-btn {
+    margin-left: 20px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.user-greeting {
+    color: var(--text-muted);
+    margin: 0 10px;
+}
+
+.water-summary {
+    text-align: center;
+    margin-bottom: 30px;
+}
+.water-total {
+    font-size: 3rem;
+    color: var(--accent);
+}
+.progress-container {
+    background: #333;
+    height: 20px;
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 15px;
+    overflow: hidden;
+}
+.progress-fill {
+    background: var(--accent);
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+/* Input Overrides */
+.input-dark {
+    background: #1a1b26;
+    border: 1px solid #444;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    width: 100%;
+    font-family: inherit;
+}
+
+/* Buttons */
+.btn-danger {
+    background-color: #ef4444;
+    border: 1px solid #ef4444;
+    color: white;
+}
+.btn-danger:hover {
+    background-color: #dc2626;
+}
+
+/* Flex Utilities */
+.flex-between-center {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Sizing Utilities */
+.max-w-500 {
+    max-width: 500px;
+    margin: 0 auto;
+}

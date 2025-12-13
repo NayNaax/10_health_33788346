@@ -17,7 +17,7 @@
             <form action="<%= basePath %>/fitness/exercises/search" method="GET" class="styled-form" style="max-width: 500px; margin: 0 auto;">
             <p>Search for exercises by muscle group to get inspiration.</p>
 
-            <form action="<%= basePath %>/fitness/exercises/search" method="GET" class="styled-form" style="max-width: 500px; margin: 0 auto;">
+            <form action="<%= basePath %>/fitness/exercises/search" method="GET" class="styled-form max-w-500">
                 <div class="form-group">
                     <label for="muscle">Select Muscle Group</label>
                     <select name="muscle" id="muscle">
@@ -37,18 +37,18 @@
             </form>
 
             <% if (exercises && exercises.length > 0) { %>
-            <div class="results-grid" style="margin-top: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            <div class="grid-container grid-auto-fit margin-top-40">
                 <% exercises.forEach(function(ex) { %>
-                <div class="card" style="background: var(--surface); padding: 20px; border-radius: 12px; border: 1px solid var(--secondary);">
-                    <h3 style="color: var(--accent); margin-bottom: 10px;"><%= ex.name %></h3>
+                <div class="card">
+                    <h3 class="text-accent margin-bottom-10"><%= ex.name %></h3>
                     <p><strong>Type:</strong> <%= ex.type %></p>
                     <p><strong>Muscle:</strong> <%= ex.muscle %></p>
                     <p><strong>Difficulty:</strong> <%= ex.difficulty %></p>
-                    <p style="margin-top: 10px; font-size: 0.9rem; color: var(--text-muted)"><%= ex.instructions.substring(0, 100) %>...</p>
-                    <div style="margin-top: 15px; text-align: right;">
+                    <p class="text-muted margin-top-10" style="font-size: 0.9rem"><%= ex.instructions.substring(0, 100) %>...</p>
+                    <div class="text-right margin-top-20">
                         <a href="<%= basePath %>/fitness/add?activity_name=<%= encodeURIComponent(ex.name) %>"
                        class="btn-login"
-                       style="display: inline-block; margin-top: 15px; text-align: center; width: 100%;">
+                       style="display: inline-block; width: 100%; text-align: center;">
                        Log This
                     </a>
                     </div>
@@ -57,7 +57,7 @@
             </div>
         </section>
         <% } else if (typeof exercises !== 'undefined') { %>
-        <section class="content-section" style="text-align: center;">
+        <section class="content-section text-center">
             <p>No exercises found.</p>
         </section>
         <% } %>
