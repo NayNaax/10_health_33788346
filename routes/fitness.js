@@ -4,13 +4,7 @@ const router = express.Router();
 const { check, validationResult } = require("express-validator");
 const auditLog = require("./audit");
 
-const requireLogin = (req, res, next) => {
-    if (req.session.loggedin) return next();
-    const rootPrefix = res.locals.baseUrl || "" || req.baseUrl.replace(/\/fitness$/, "");
-    res.redirect(rootPrefix + "/users/login");
-};
-
-router.use(requireLogin);
+// router.use(requireLogin); // Disabled for public access
 
 router.get("/add", (req, res) => {
     res.render("add_workout", {
@@ -65,7 +59,7 @@ router.post(
 
             auditLog(
                 req.db,
-                req.session.username,
+                req.session.username || "Guest",
                 "ADD_WORKOUT",
                 `Type: ${activity_type}, Duration: ${duration}, Cal: ${calories}, Intensity: ${intensity}`
             );
@@ -197,7 +191,12 @@ router.post("/nutrition/log", (req, res) => {
     req.db.query(sql, [meal_name, calories, protein, fat, carbs, userId], (err, result) => {
         if (err) console.error(err);
 
-        auditLog(req.db, req.session.username, "LOG_MEAL", `Meal: ${meal_name}, Cal: ${Number(calories).toFixed(0)}`);
+        auditLog(
+            req.db,
+            req.session.username || "Guest",
+            "LOG_MEAL",
+            `Meal: ${meal_name}, Cal: ${Number(calories).toFixed(0)}`
+        );
         res.redirect((res.locals.baseUrl || "") + "/fitness/nutrition");
     });
 });
@@ -221,7 +220,7 @@ router.get("/search", (req, res) => {
             return res.send("Database error");
         }
 
-        auditLog(req.db, req.session.username, "SEARCH_WORKOUT", `Query: ${query}`);
+        auditLog(req.db, req.session.username || "Guest", "SEARCH_WORKOUT", `Query: ${query}`);
 
         res.render("search", {
             title: "Bitality - Search Results",
@@ -260,7 +259,7 @@ router.post("/bmi", (req, res) => {
     else if (bmi < 29.9) status = "Overweight";
     else status = "Obesity";
 
-    auditLog(req.db, req.session.username, "CALCULATE_BMI", `BMI: ${bmi}, Status: ${status}`);
+    auditLog(req.db, req.session.username || "Guest", "CALCULATE_BMI", `BMI: ${bmi}, Status: ${status}`);
 
     res.render("bmi", {
         title: "Bitality - BMI Calculator",
@@ -271,7 +270,7 @@ router.post("/bmi", (req, res) => {
 });
 
 router.get("/tips", (req, res) => {
-    auditLog(req.db, req.session.username, "VIEW_TIPS", "Viewed health tips page");
+    auditLog(req.db, req.session.username || "Guest", "VIEW_TIPS", "Viewed health tips page");
     const tips = [
         { title: "Hydrate", content: "Drink at least 2 litres of water a day to stay hydrated." },
         { title: "Sleep", content: "Aim for 7-9 hours of sleep per night for optimal recovery." },
@@ -326,7 +325,7 @@ router.post("/water", (req, res) => {
                 });
             }
 
-            auditLog(req.db, req.session.username, "ADD_WATER", `Amount: ${amount}ml`);
+            auditLog(req.db, req.session.username || "Guest", "ADD_WATER", `Amount: ${amount}ml`);
 
             const totalQuery =
                 "SELECT SUM(amount) as total FROM water_logs WHERE user_id = ? AND DATE(date) = CURDATE()";
@@ -378,7 +377,7 @@ router.post("/bmr", (req, res) => {
         bmr -= 161;
     }
 
-    auditLog(req.db, req.session.username, "CALCULATE_BMR", `BMR: ${Math.round(bmr)}`);
+    auditLog(req.db, req.session.username || "Guest", "CALCULATE_BMR", `BMR: ${Math.round(bmr)}`);
 
     res.render("bmr", {
         title: "Bitality - BMR Calculator",
@@ -429,7 +428,12 @@ router.post("/macros", (req, res) => {
     const carbsCal = tdee - proteinCal - fatsCal;
     const carbs = Math.round(carbsCal / 4);
 
-    auditLog(req.db, req.session.username, "CALCULATE_MACROS", `Goal: ${goal}, Result: ${Math.round(tdee)}kcal`);
+    auditLog(
+        req.db,
+        req.session.username || "Guest",
+        "CALCULATE_MACROS",
+        `Goal: ${goal}, Result: ${Math.round(tdee)}kcal`
+    );
 
     res.render("macros", {
         title: "Bitality - Macro Calculator",
@@ -454,7 +458,7 @@ router.get("/profile", (req, res) => {
             console.error(err);
             return res.render("profile", {
                 title: "Bitality - Profile",
-                user: req.session.username,
+                user: req.session.username || "Guest",
                 stats: { totalWorkouts: 0, totalCalories: 0, totalDuration: 0 },
                 recentActivity: [],
                 basePath: res.locals.baseUrl,
@@ -467,7 +471,7 @@ router.get("/profile", (req, res) => {
                 console.error(err);
                 return res.render("profile", {
                     title: "Bitality - Profile",
-                    user: req.session.username,
+                    user: req.session.username || "Guest",
                     stats: {
                         totalWorkouts: statsResult[0].count,
                         totalCalories: statsResult[0].calories || 0,
@@ -478,11 +482,11 @@ router.get("/profile", (req, res) => {
                 });
             }
 
-            auditLog(req.db, req.session.username, "VIEW_PROFILE", "Viewed personal profile");
+            auditLog(req.db, req.session.username || "Guest", "VIEW_PROFILE", "Viewed personal profile");
 
             res.render("profile", {
                 title: "Bitality - Profile",
-                user: req.session.username,
+                user: req.session.username || "Guest",
                 stats: {
                     totalWorkouts: statsResult[0].count,
                     totalCalories: statsResult[0].calories || 0,
