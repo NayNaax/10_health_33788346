@@ -2,6 +2,29 @@
 
 A comprehensive web-based application for tracking workouts, nutrition, and health metrics.
 
+## Live Deployment
+
+Access the application here: **[https://doc.gold.ac.uk/usr/355/](https://doc.gold.ac.uk/usr/355/)**
+
+## Features
+
+-   **Accessible to All**: Works without login! Guest users (User ID 1) can explore all features immediately.
+-   **User Authentication**: Optional Login/Register for personalized accounts.
+-   **Dashboard**: Quick stats (Calories, Workouts, Water) and activity feed.
+-   **Fitness Logging**: Track workouts with duration, intensity, and calories.
+-   **Water Tracker**: Persist your daily water intake.
+-   **Nutrition Tracker**: Log meals using natural language (e.g., "1 apple and 2 eggs").
+-   **Find Exercises**: Search for new exercises by muscle group.
+-   **Health Tools**: BMI Calculator, BMR Calculator, Macro Split.
+-   **Dark Mode**: Toggle between light and dark themes.
+
+## Technology Stack
+
+-   **Backend**: Node.js, Express.js
+-   **Database**: MySQL
+-   **Frontend**: EJS, CSS (Vanilla), JavaScript
+-   **APIs**: API Ninjas (Exercises), CalorieNinjas (Nutrition)
+
 ## Getting Started
 
 ### Prerequisites
@@ -28,38 +51,19 @@ A comprehensive web-based application for tracking workouts, nutrition, and heal
 
 ### Configuration
 
-1.  Create a `.env` file in the root directory (if not present) with the following:
+1.  Create a `.env` file in the root directory with the following:
+
     ```env
-    DB_HOST=localhost
-    DB_USER=root
-    DB_PASSWORD=your_password
-    DB_NAME=health
+    # Database Configuration
+    HEALTH_HOST=localhost
+    HEALTH_USER=health_app
+    HEALTH_PASSWORD=your_password
+    HEALTH_DATABASE=health
+
+    # API Keys
     API_NINJAS_KEY=your_key_here
     CALORIE_NINJAS_KEY=your_key_here
+
+    # Deployment (Optional)
+    HEALTH_BASE_PATH=/usr/355
     ```
-
-### Running the App
-
-1.  Start the server:
-    ```bash
-    npm start
-    ```
-2.  Open your browser and navigate to `http://localhost:8000`.
-
-## Features
-
--   **User Authentication**: Secure Login/Register/Logout.
--   **Dashboard**: Quick stats (Calories, Workouts, Water) and activity feed.
--   **Fitness Logging**: Track workouts with duration, intensity, and calories.
--   **Water Tracker**: Persist your daily water intake.
--   **Nutrition Tracker**: Log meals using natural language (e.g., "1 apple and 2 eggs").
--   **Find Exercises**: Search for new exercises by muscle group.
--   **Health Tools**: BMI Calculator, BMR Calculator, Macro Split.
--   **Dark Mode**: Toggle between light and dark themes.
-
-## technology Stack
-
--   **Backend**: Node.js, Express.js
--   **Database**: MySQL
--   **Frontend**: EJS, CSS (Vanilla), JavaScript
--   **APIs**: API Ninjas (Exercises), CalorieNinjas (Nutrition)
