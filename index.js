@@ -9,8 +9,6 @@ const path = require("path");
 const app = express();
 const port = 8000;
 // Optional base path for hosting under a subdirectory (e.g., /usr/355)
-// Supports either `BASE_PATH` (path) or `HEALTH_BASE_PATH` (full URL or path).
-// If a full URL is provided, the pathname will be extracted.
 function resolveBasePath() {
     const raw = (process.env.HEALTH_BASE_PATH || process.env.BASE_PATH || "").trim();
     if (!raw) return "";

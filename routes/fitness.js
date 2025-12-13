@@ -4,8 +4,6 @@ const router = express.Router();
 const { check, validationResult } = require("express-validator");
 const auditLog = require("./audit");
 
-// router.use(requireLogin); // Disabled for public access
-
 router.get("/add", (req, res) => {
     res.render("add_workout", {
         title: "Bitality - Add Workout",
