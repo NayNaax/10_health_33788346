@@ -61,12 +61,12 @@ app.use((req, res, next) => {
     req.db = db;
     res.locals.user = req.session.loggedin ? req.session.username : null;
     // Expose base path to views for building links
-    // Prefer configured basePath; if not set, try to infer '/usr/355' from request path on hosted VM.
+    // Prefer configured basePath; if not set, infer '/usr/<id>' from request path on hosted VM.
     let inferredBase = basePath || "";
-    if (!inferredBase) {
-        // Common VM pattern: app served under /usr/<course>
-        if (req.originalUrl.startsWith("/usr/355")) {
-            inferredBase = "/usr/355";
+    if (!inferredBase && typeof req.originalUrl === "string") {
+        const match = req.originalUrl.match(/^\/(usr\/\d+)(?:\/|$)/);
+        if (match && match[1]) {
+            inferredBase = "/" + match[1];
         }
     }
     res.locals.baseUrl = inferredBase;
