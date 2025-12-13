@@ -25,6 +25,8 @@ function resolveBasePath() {
 }
 
 const basePath = resolveBasePath();
+// Optional absolute public base URL for building full redirects when needed
+const publicBaseUrl = (process.env.PUBLIC_BASE_URL || "").trim();
 
 function inferBasePathFromReq(req) {
     // Only honor X-Forwarded-Prefix to avoid duplicating /usr/<id>
@@ -70,6 +72,7 @@ app.use((req, res, next) => {
     res.locals.user = req.session.loggedin ? req.session.username : null;
     const effectiveBase = basePath || inferBasePathFromReq(req);
     res.locals.baseUrl = effectiveBase;
+    res.locals.publicBaseUrl = publicBaseUrl;
     next();
 });
 
