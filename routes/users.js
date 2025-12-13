@@ -35,7 +35,7 @@ router.post("/login", (req, res) => {
 
             auditLog(req.db, username, "LOGIN", "User logged in successfully");
 
-            res.redirect((res.locals.baseUrl || "") + "/");
+            res.redirect("/usr/355/");
         } else {
             auditLog(req.db, username, "LOGIN_FAIL", "Failed login attempt");
             res.render("login", {
@@ -55,8 +55,7 @@ router.get("/logout", (req, res) => {
         if (err) {
             console.error(err);
         }
-        const rootPrefix = res.locals.baseUrl || "" || req.baseUrl.replace(/\/users$/, "");
-        res.redirect(rootPrefix + "/");
+        res.redirect("/usr/355/");
     });
 });
 
@@ -127,7 +126,7 @@ router.post(
                         });
                     }
                     auditLog(req.db, username, "REGISTER", "New user registered");
-                    res.redirect((res.locals.baseUrl || "") + "/users/login");
+                    res.redirect("/usr/355/users/login");
                 }
             );
         });
