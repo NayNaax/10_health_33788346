@@ -299,14 +299,14 @@ router.get("/water", (req, res) => {
                 title: "Bitality - Water Tracker",
                 totalWater: 0,
                 message: "Error fetching data",
-                basePath: res.locals.baseUrl,
+                basePath: res.locals.baseUrl, // fix: use basePath
             });
         }
         res.render("water", {
             title: "Bitality - Water Tracker",
             totalWater: results[0].total || 0,
             message: null,
-            baseUrl: res.locals.baseUrl,
+            basePath: res.locals.baseUrl, // fix: use basePath
         });
     });
 });
