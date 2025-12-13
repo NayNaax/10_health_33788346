@@ -7,7 +7,7 @@ const expressValidator = require("express-validator");
 const path = require("path");
 
 const app = express();
-const port = 8000;
+const port = process.env.PORT || 8000;
 // Optional base path for hosting under a subdirectory (e.g., /usr/355)
 function resolveBasePath() {
     const raw = (process.env.HEALTH_BASE_PATH || process.env.BASE_PATH || "").trim();

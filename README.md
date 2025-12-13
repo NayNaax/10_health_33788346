@@ -64,6 +64,15 @@ Access the application here: **[https://doc.gold.ac.uk/usr/355/](https://doc.gol
     API_NINJAS_KEY=your_key_here
     CALORIE_NINJAS_KEY=your_key_here
 
-    # Deployment (Optional)
+    # Deployment
+    # LOCAL DEVELOPMENT: Must be set to /usr/355 to match hardcoded redirects
     HEALTH_BASE_PATH=/usr/355
     ```
+
+### Running the Application
+
+1.  Start the server:
+    ```bash
+    npm start
+    ```
+2.  Open your browser to: **[http://localhost:8000/usr/355/](http://localhost:8000/usr/355/)**
