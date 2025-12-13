@@ -382,3 +382,22 @@ nav a.active {
     max-width: 500px;
     margin: 0 auto;
 }
+
+/* Alerts */
+.alert {
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+.alert.success {
+    background-color: rgba(0, 210, 211, 0.1);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+}
+.alert.error {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid #ef4444;
+}

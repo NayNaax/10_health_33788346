@@ -35,8 +35,7 @@ router.post("/login", (req, res) => {
 
             auditLog(req.db, username, "LOGIN", "User logged in successfully");
 
-            const rootPrefix = res.locals.baseUrl || "" || req.baseUrl.replace(/\/users$/, "");
-            res.redirect(rootPrefix + "/");
+            res.redirect((res.locals.baseUrl || "") + "/");
         } else {
             auditLog(req.db, username, "LOGIN_FAIL", "Failed login attempt");
             res.render("login", {
