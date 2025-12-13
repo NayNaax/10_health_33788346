@@ -75,4 +75,4 @@ Access the application here: **[https://doc.gold.ac.uk/usr/355/](https://doc.gol
     ```bash
     npm start
     ```
-2.  Open your browser to: **[http://localhost:8000/usr/355/](http://localhost:8000/usr/355/)**
+2.  Open your browser to: **[http://localhost:8000/](http://localhost:8000/)**
