@@ -28,6 +28,36 @@ function resolveBasePath() {
 
 const basePath = resolveBasePath();
 
+function inferBasePathFromReq(req) {
+    // 1) X-Forwarded-Prefix (commonly set by proxies)
+    const xfp = req.headers["x-forwarded-prefix"];
+    if (typeof xfp === "string" && xfp.trim()) {
+        const trimmed = xfp.trim();
+        if (trimmed === "/") return "";
+        return trimmed.replace(/\/$/, "");
+    }
+
+    // 2) Referer header (extract '/usr/<id>' from the previous page URL)
+    const referer = req.headers["referer"];
+    if (typeof referer === "string" && referer.trim()) {
+        try {
+            const refUrl = new URL(referer);
+            const m = refUrl.pathname.match(/^\/(usr\/\d+)(?:\/|$)/);
+            if (m && m[1]) return "/" + m[1];
+        } catch (_) {
+            // ignore parse errors
+        }
+    }
+
+    // 3) Original URL (if the proxy preserves the prefix)
+    if (typeof req.originalUrl === "string") {
+        const m2 = req.originalUrl.match(/^\/(usr\/\d+)(?:\/|$)/);
+        if (m2 && m2[1]) return "/" + m2[1];
+    }
+
+    return "";
+}
+
 const dbConfig = {
     host: process.env.HEALTH_HOST || "localhost",
     user: process.env.HEALTH_USER || "health_app",
@@ -61,14 +91,8 @@ app.use((req, res, next) => {
     req.db = db;
     res.locals.user = req.session.loggedin ? req.session.username : null;
     // Expose base path to views for building links
-    // Prefer configured basePath; if not set, infer '/usr/<id>' from request path on hosted VM.
-    let inferredBase = basePath || "";
-    if (!inferredBase && typeof req.originalUrl === "string") {
-        const match = req.originalUrl.match(/^\/(usr\/\d+)(?:\/|$)/);
-        if (match && match[1]) {
-            inferredBase = "/" + match[1];
-        }
-    }
+    // Prefer configured basePath; otherwise infer from proxy headers, referer, or request path.
+    let inferredBase = basePath || inferBasePathFromReq(req);
     res.locals.baseUrl = inferredBase;
     next();
 });
