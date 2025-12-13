@@ -36,7 +36,7 @@ router.post("/login", (req, res) => {
             auditLog(req.db, username, "LOGIN", "User logged in successfully");
 
             const rootPrefix = req.baseUrl.replace(/\/users$/, "");
-            res.redirect(rootPrefix + "/");
+            res.redirect(rootPrefix + "../");
         } else {
             auditLog(req.db, username, "LOGIN_FAIL", "Failed login attempt");
             res.render("login", {
@@ -57,7 +57,7 @@ router.get("/logout", (req, res) => {
             console.error(err);
         }
         const rootPrefix = req.baseUrl.replace(/\/users$/, "");
-        res.redirect(rootPrefix + "/");
+        res.redirect(rootPrefix + "../");
     });
 });
 
@@ -128,7 +128,7 @@ router.post(
                         });
                     }
                     auditLog(req.db, username, "REGISTER", "New user registered");
-                    res.redirect(req.baseUrl + "/login");
+                    res.redirect(req.baseUrl + "../login");
                 }
             );
         });
