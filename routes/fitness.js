@@ -6,7 +6,7 @@ const auditLog = require("./audit");
 
 const requireLogin = (req, res, next) => {
     if (req.session.loggedin) return next();
-    const rootPrefix = req.baseUrl.replace(/\/fitness$/, "");
+    const rootPrefix = res.locals.baseUrl || "" || req.baseUrl.replace(/\/fitness$/, "");
     res.redirect(rootPrefix + "/users/login");
 };
 
@@ -92,7 +92,7 @@ router.get("/exercises", (req, res) => {
 
 router.get("/exercises/search", async (req, res) => {
     const muscle = req.query.muscle;
-    if (!muscle) return res.redirect(req.baseUrl + "/exercises");
+    if (!muscle) return res.redirect((res.locals.baseUrl || "") + "/fitness/exercises");
 
     try {
         const response = await fetch(`https://api.api-ninjas.com/v1/exercises?muscle=${muscle}`, {
@@ -154,7 +154,7 @@ router.post("/nutrition/analyze", async (req, res) => {
     const historySql = "SELECT * FROM nutrition_logs WHERE user_id = ? ORDER BY date DESC LIMIT 10";
 
     req.db.query(historySql, [userId], async (dbErr, historyResults) => {
-        if (!queryText) return res.redirect(req.baseUrl + "/nutrition");
+        if (!queryText) return res.redirect((res.locals.baseUrl || "") + "/fitness/nutrition");
 
         try {
             const response = await fetch(
